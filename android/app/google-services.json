@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "205000411983",
+    "project_id": "loankate-343fd",
+    "storage_bucket": "loankate-343fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205000411983:android:760758a7ef1ded6047133a",
+        "android_client_info": {
+          "package_name": "com.quick.loans.online.instant.money"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205000411983-96a0gb2d558h9n43ku8r8ea5e4levrle.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGwirWBo0viwk-AzkUXWPKU-wTtJG_q40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205000411983-96a0gb2d558h9n43ku8r8ea5e4levrle.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
