@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/webview.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -299,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                                           'assets/images/arrow.json'))
                                 ]),
                             InkWell(
-                                onTap: () async{
+                                onTap: () async {
                                   Map userId = {'CUID': _appState.cuid};
                                   logEvent('GetLoan', userId);
                                   OneSignal.shared
@@ -319,7 +318,8 @@ class _HomePageState extends State<HomePage> {
                                   //     status.subscriptionStatus.userId;
 
                                   //
-                                  _appState.setOSID("70621a8c-7e46-46b9-88fd-1411a45982a3");
+                                  _appState.setOSID(
+                                      "70621a8c-7e46-46b9-88fd-1411a45982a3");
                                   // print(playerId);
                                   //_appState.setOSID(playerId);
                                   Timer(Duration(seconds: 1), () async {
@@ -471,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                           children: <Widget>[
                             Container(
                               height: 50.0,
-                              child: RaisedButton(
+                              child: ElevatedButton(
                                 onPressed: () async {
                                   Map userId = {'open': 'open'};
                                   logEvent('SpOfferYes', userId);
@@ -530,9 +530,12 @@ class _HomePageState extends State<HomePage> {
                                   });
                                   Navigator.of(context).pop();
                                 },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                padding: EdgeInsets.all(0.0),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.all(0.0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                ),
                                 child: Ink(
                                   decoration: BoxDecoration(
                                       gradient: LinearGradient(
@@ -566,7 +569,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Container(
                               height: 50.0,
-                              child: RaisedButton(
+                              child: ElevatedButton(
                                 onPressed: () async {
                                   Map userId = {'open': 'open'};
                                   logEvent('SpOfferYes', userId);
@@ -625,9 +628,12 @@ class _HomePageState extends State<HomePage> {
                                   });
                                   Navigator.of(context).pop();
                                 },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                padding: EdgeInsets.all(0.0),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.all(0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                ),
                                 child: Ink(
                                   decoration: BoxDecoration(
                                       gradient: LinearGradient(

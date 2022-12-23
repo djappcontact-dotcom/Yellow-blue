@@ -315,7 +315,7 @@ class _CalculatState extends State<Calculat> {
                                       ),
                                     ),
                                     child: Text(
-                                      'Mounth',
+                                      'Month',
                                       textScaleFactor: 1.0,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
@@ -478,7 +478,7 @@ class _CalculatState extends State<Calculat> {
                                       ),
                                     ),
                                     child: Text(
-                                      'Mounth',
+                                      'Month',
                                       textScaleFactor: 1.0,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
