@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_picker/flutter_picker.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loanproject/state.dart';
@@ -55,11 +57,18 @@ class _CalculatState extends State<Calculat> {
       logEvent('GetLoan', userId);
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => WebScreen()),
+        MaterialPageRoute(builder: (context) => WebScreen()),
       );
       print('GNIDA open from click from CALCULATOR');
     });
+  }
+
+  String _getPickerValues() {
+    var arr = [];
+    for (int i = 2; i < 25; i++) {
+      arr.add(i);
+    }
+    return '''$arr''';
   }
 
   Future<bool> logEvent(String eventName, Map eventValues) async {
@@ -260,41 +269,63 @@ class _CalculatState extends State<Calculat> {
                                                     sizePadding,
                                             color: Color(0xFF1D1D1D)),
                                       ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: new BorderRadius.all(
-                                              Radius.circular(10.0)),
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topRight,
-                                              end: Alignment.bottomLeft,
-                                              stops: [
-                                                0.1,
-                                                0.5
-                                              ],
-                                              colors: [
-                                                Color(0xFF1C1C1C),
-                                                Color(0xFF454545)
-                                              ]),
-                                        ),
-                                        child: TextField(
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins-SemiBold',
-                                              fontSize:
-                                                  SizeConfig.heightMultiplier *
-                                                      sizePadding,
-                                              color: Colors.white),
-                                          controller: _loanTerms1,
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              borderSide: BorderSide(
-                                                  color: Colors.black),
+                                      InkWell(
+                                        onTap: () {
+                                          Picker(
+                                              adapter: PickerDataAdapter<
+                                                      String>(
+                                                  pickerdata: JsonDecoder()
+                                                      .convert(
+                                                          _getPickerValues())),
+                                              changeToFirst: true,
+                                              hideHeader: false,
+                                              onConfirm:
+                                                  (Picker picker, List value) {
+                                                _loanTerms1.text = picker
+                                                    .adapter.text
+                                                    .replaceAll(']', '')
+                                                    .replaceAll('[', '');
+                                                print(value.toString());
+                                                print(picker.adapter.text);
+                                              }).showModal(this.context);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: new BorderRadius.all(
+                                                Radius.circular(10.0)),
+                                            gradient: LinearGradient(
+                                                begin: Alignment.topRight,
+                                                end: Alignment.bottomLeft,
+                                                stops: [
+                                                  0.1,
+                                                  0.5
+                                                ],
+                                                colors: [
+                                                  Color(0xFF1C1C1C),
+                                                  Color(0xFF454545)
+                                                ]),
+                                          ),
+                                          child: TextField(
+                                            enabled: false,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins-SemiBold',
+                                                fontSize: SizeConfig
+                                                        .heightMultiplier *
+                                                    sizePadding,
+                                                color: Colors.white),
+                                            controller: _loanTerms1,
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                borderSide: BorderSide(
+                                                    color: Colors.black),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -423,41 +454,63 @@ class _CalculatState extends State<Calculat> {
                                                     sizePadding,
                                             color: Color(0xFF1D1D1D)),
                                       ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: new BorderRadius.all(
-                                              Radius.circular(10.0)),
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topRight,
-                                              end: Alignment.bottomLeft,
-                                              stops: [
-                                                0.1,
-                                                0.5
-                                              ],
-                                              colors: [
-                                                Color(0xFF1C1C1C),
-                                                Color(0xFF454545)
-                                              ]),
-                                        ),
-                                        child: TextField(
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins-SemiBold',
-                                              fontSize:
-                                                  SizeConfig.heightMultiplier *
-                                                      sizePadding,
-                                              color: Colors.white),
-                                          controller: _loanTerms2,
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              borderSide: BorderSide(
-                                                  color: Colors.black),
+                                      InkWell(
+                                        onTap: () {
+                                          Picker(
+                                              adapter: PickerDataAdapter<
+                                                      String>(
+                                                  pickerdata: JsonDecoder()
+                                                      .convert(
+                                                          _getPickerValues())),
+                                              changeToFirst: true,
+                                              hideHeader: false,
+                                              onConfirm:
+                                                  (Picker picker, List value) {
+                                                _loanTerms2.text = picker
+                                                    .adapter.text
+                                                    .replaceAll(']', '')
+                                                    .replaceAll('[', '');
+                                                print(value.toString());
+                                                print(picker.adapter.text);
+                                              }).showModal(this.context);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: new BorderRadius.all(
+                                                Radius.circular(10.0)),
+                                            gradient: LinearGradient(
+                                                begin: Alignment.topRight,
+                                                end: Alignment.bottomLeft,
+                                                stops: [
+                                                  0.1,
+                                                  0.5
+                                                ],
+                                                colors: [
+                                                  Color(0xFF1C1C1C),
+                                                  Color(0xFF454545)
+                                                ]),
+                                          ),
+                                          child: TextField(
+                                            enabled: false,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins-SemiBold',
+                                                fontSize: SizeConfig
+                                                        .heightMultiplier *
+                                                    sizePadding,
+                                                color: Colors.white),
+                                            controller: _loanTerms2,
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                borderSide: BorderSide(
+                                                    color: Colors.black),
+                                              ),
                                             ),
                                           ),
                                         ),

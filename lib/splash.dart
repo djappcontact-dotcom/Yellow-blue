@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/tutorial/first.dart';
-import 'package:loanproject/webview.dart';
 import 'package:loanproject/webview_click.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';

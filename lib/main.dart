@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
