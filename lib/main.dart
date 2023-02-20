@@ -14,7 +14,6 @@ bool _checkNotification = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
   if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
 
@@ -25,7 +24,7 @@ Future<void> main() async {
 
     if (swAvailable && swInterceptAvailable) {
       AndroidServiceWorkerController serviceWorkerController =
-      AndroidServiceWorkerController.instance();
+          AndroidServiceWorkerController.instance();
 
       await serviceWorkerController
           .setServiceWorkerClient(AndroidServiceWorkerClient(
@@ -51,8 +50,9 @@ Future<void> main() async {
   // ]);
   final state = AppState();
 
-
-  runApp(MultiProvider(providers: [ChangeNotifierProvider<AppState>.value(value: state)], child: MyApp()));
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider<AppState>.value(value: state)],
+      child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -60,17 +60,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return OverlaySupport(
         child: GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: LayoutBuilder(builder: (context, constraints) {
-            return OrientationBuilder(builder: (context, orientation) {
-              SizeConfig().init(constraints, orientation);
+      debugShowCheckedModeBanner: false,
+      home: LayoutBuilder(builder: (context, constraints) {
+        return OrientationBuilder(builder: (context, orientation) {
+          SizeConfig().init(constraints, orientation);
 
-
-              return SplashScreen();
-            });
-          }),
-          theme:
-          Theme.of(context).copyWith(appBarTheme: Theme.of(context).appBarTheme.copyWith(brightness: Brightness.dark)),
-        ));
+          return SplashScreen();
+        });
+      }),
+      theme: Theme.of(context).copyWith(
+          appBarTheme: Theme.of(context)
+              .appBarTheme
+              .copyWith(brightness: Brightness.dark)),
+    ));
   }
 }

@@ -8,7 +8,6 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/tutorial/first.dart';
@@ -126,7 +125,7 @@ class _WebScreenState extends State<WebScreen> {
         allowsInlineMediaPlayback: true,
       ));
 
-   PullToRefreshController pullToRefreshController;
+   // PullToRefreshController pullToRefreshController;
    ContextMenu contextMenu;
   String url = "";
   double progress = 0;
@@ -177,18 +176,18 @@ class _WebScreenState extends State<WebScreen> {
           builder: (context, snapshot) {
             if (_connectionStatus != 'ConnectivityResult.none') {
               return Scaffold(
+                extendBodyBehindAppBar: true,
                 appBar: PreferredSize(
                     preferredSize: Size.fromHeight(40.0),
                     // here the desired height
                     child: AppBar(
-                        backgroundColor: Color(0xFFFFFFFF),
-                        brightness: Brightness.light,
+                        backgroundColor: Colors.transparent,
                         elevation: 0,
                         leading: GestureDetector(
                           child: Icon(Icons.arrow_back_ios,
                               color: Color.fromRGBO(208, 201, 214, 1)),
                           onTap: () => _exitAppArrow(context),
-                        ))),
+                        ), systemOverlayStyle: SystemUiOverlayStyle.dark)),
                 body: Center(
                   child:
                   InAppWebView(
@@ -214,7 +213,7 @@ class _WebScreenState extends State<WebScreen> {
 
                     initialUserScripts: UnmodifiableListView<UserScript>([]),
                     initialOptions: options,
-                    pullToRefreshController: pullToRefreshController,
+                    // pullToRefreshController: pullToRefreshController,
                     onWebViewCreated: (controller) {
                       webViewController = controller;
                     },
@@ -243,10 +242,10 @@ class _WebScreenState extends State<WebScreen> {
                         "javascript",
                         "about"
                       ].contains(uri.scheme)) {
-                        if (await canLaunch(url)) {
+                        if (await canLaunchUrl(Uri.parse(url))) {
                           // Launch the App
-                          await launch(
-                            url,
+                          await launchUrl(
+                            Uri.parse(url),
                           );
                           // and cancel the request
                           return NavigationActionPolicy.CANCEL;
@@ -256,18 +255,18 @@ class _WebScreenState extends State<WebScreen> {
                       return NavigationActionPolicy.ALLOW;
                     },
                     onLoadStop: (controller, url) async {
-                      pullToRefreshController.endRefreshing();
+                      // pullToRefreshController.endRefreshing();
                       setState(() {
                         this.url = url.toString();
                         urlController.text = this.url;
                       });
                     },
                     onLoadError: (controller, url, code, message) {
-                      pullToRefreshController.endRefreshing();
+                      // pullToRefreshController.endRefreshing();
                     },
                     onProgressChanged: (controller, progress) {
                       if (progress == 100) {
-                        pullToRefreshController.endRefreshing();
+                        // pullToRefreshController.endRefreshing();
                       }
                       setState(() {
                         this.progress = progress / 100;
@@ -375,7 +374,7 @@ class _WebScreenState extends State<WebScreen> {
                 //   //   onTap: () => Navigator.of(context).pop(),
                 //   // )
                 // ),
-                //  backgroundColor: Colors.white,
+                 backgroundColor: Colors.white,
                   body: Container(
                       decoration: new BoxDecoration(
                         gradient: new LinearGradient(
@@ -389,7 +388,7 @@ class _WebScreenState extends State<WebScreen> {
                             stops: [0.0, 1.0],
                             tileMode: TileMode.clamp),
                       ),
-                      child: Stack(children: <Widget>[
+                      child: Stack(children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,

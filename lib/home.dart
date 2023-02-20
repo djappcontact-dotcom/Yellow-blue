@@ -221,101 +221,102 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.black, // Status bar color
             )),
         body: Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/back_main.png'),
-                fit: BoxFit.fill,
-              ),
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/back_main.png'),
+              fit: BoxFit.fill,
             ),
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: 0.0, right: 0.0, bottom: 10, top: 20.0),
-                child:
-                    Stack(alignment: AlignmentDirectional.bottomCenter, children: <
-                        Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(top: topPad),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(
-                              height: sizeBox,
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 0.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding:
-                                        EdgeInsets.only(top: 15, bottom: 15),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        top: BorderSide(
-                                            width: 1.0,
-                                            color: Color(0xFFF1FF50)),
-                                        bottom: BorderSide(
-                                            width: 1.0,
-                                            color: Color(0xFFF1FF50)),
-                                      ),
+          ),
+          child: Padding(
+            padding:
+                EdgeInsets.only(left: 0.0, right: 0.0, bottom: 10, top: 20.0),
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(top: topPad),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            height: sizeBox,
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 0.0),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.only(top: 15, bottom: 15),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      width: 1.0,
+                                      color: Color(0xFFF1FF50),
                                     ),
-                                    child: Text(
-                                      "APPLY FOR\nA LOAN",
-                                      textScaleFactor: 1.0,
-                                      style: TextStyle(
-                                        color: Color(0xFF1D1D1D),
-                                        fontFamily: "Phonk",
-                                        fontSize: SizeConfig.heightMultiplier *
-                                            sizeTextBottom,
-                                      ),
-                                      textAlign: TextAlign.center,
+                                    bottom: BorderSide(
+                                      width: 1.0,
+                                      color: Color(0xFFF1FF50),
                                     ),
-                                  )),
+                                  ),
+                                ),
+                                child: Text(
+                                  "APPLY FOR\nA LOAN",
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                    color: Color(0xFF1D1D1D),
+                                    fontFamily: "Phonk",
+                                    fontSize: SizeConfig.heightMultiplier *
+                                        sizeTextBottom,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                //Center Row contents horizontally,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(
-                                      height: 150,
-                                      width: 120,
-                                      child: Lottie.asset(
-                                          'assets/images/arrow.json')),
-                                  SizedBox(
-                                      height: 150,
-                                      width: 120,
-                                      child: Lottie.asset(
-                                          'assets/images/arrow.json')),
-                                  SizedBox(
-                                      height: 150,
-                                      width: 120,
-                                      child: Lottie.asset(
-                                          'assets/images/arrow.json'))
-                                ]),
-                            InkWell(
-                                onTap: () async {
-                                  Map userId = {'CUID': _appState.cuid};
-                                  logEvent('GetLoan', userId);
-                                  OneSignal.shared
-                                      .sendTag("GetLoan", "GetLoan")
-                                      .then((response) {
-                                    print(
-                                        "Successfully sent tags with response: $response");
-                                  }).catchError((error) {
-                                    print(
-                                        "Encountered an error sending tags: $error");
-                                  });
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              //Center Row contents horizontally,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    height: 150,
+                                    width: 120,
+                                    child: Lottie.asset(
+                                        'assets/images/arrow.json')),
+                                SizedBox(
+                                    height: 150,
+                                    width: 120,
+                                    child: Lottie.asset(
+                                        'assets/images/arrow.json')),
+                                SizedBox(
+                                    height: 150,
+                                    width: 120,
+                                    child: Lottie.asset(
+                                        'assets/images/arrow.json'))
+                              ]),
+                          InkWell(
+                              onTap: () async {
+                                Map userId = {'CUID': _appState.cuid};
+                                logEvent('GetLoan', userId);
+                                OneSignal.shared
+                                    .sendTag("GetLoan", "GetLoan")
+                                    .then((response) {
+                                  print(
+                                      "Successfully sent tags with response: $response");
+                                }).catchError((error) {
+                                  print(
+                                      "Encountered an error sending tags: $error");
+                                });
 
-                                  // var status = await OneSignal.shared
-                                  //     .getPermissionSubscriptionState();
-                                  //
-                                  // var playerId =
-                                  //     status.subscriptionStatus.userId;
+                                // var status = await OneSignal.shared
+                                //     .getPermissionSubscriptionState();
+                                //
+                                // var playerId =
+                                //     status.subscriptionStatus.userId;
 
                                   //
                                   _appState.setOSID(
