@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:loanproject/size_config.dart';
 
 class PrivacyPage extends StatefulWidget {
@@ -48,13 +47,11 @@ class _SimplePageState extends State<PrivacyPage> {
     double sizePaddingDesc = 1.5;
     double padTop = 0.07;
     double sizeTitle = 3.0;
-    double sizeTopText = 100;
     if (height <= 670) {
       sizePadding = 2.2;
       sizePaddingDesc = 2;
       padTop = 0.03;
       sizeTitle = 3.5;
-      sizeTopText = 70;
     } else if (height <= 811 && height >= 671) {
       sizePadding = 1.8;
       sizePaddingDesc = 2;

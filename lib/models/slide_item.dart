@@ -10,43 +10,8 @@ class SlideItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     print(height);
-    double bottomPadding = 50.0;
-    double bottomPaddingBlock = 10.0;
-
-    // if(Platform.isAndroid && height > 670 && height <= 700){
-    //   bottomPadding = 25.0;
-    //   bottomPaddingBlock = 70.0;
-    // }
-    if (height <= 670) {
-      ///SE 2
-      bottomPadding = 25.0;
-      bottomPaddingBlock = 70.0;
-    } else if (height <= 900 && height >= 895) {
-      ///XS Max & XR & 11 & 11 Pro Max
-      bottomPadding = 90.0;
-      bottomPaddingBlock = 150.0;
-    } else if (height <= 1000 && height >= 900) {
-      ///12 pro max
-      bottomPadding = 90.0;
-      bottomPaddingBlock = 150.0;
-      //else if (height <= 739 && height >= 730) {
-    } else if (height <= 739 && height >= 710) {
-      /// 7 Plus
-      bottomPadding = 35.0;
-      bottomPaddingBlock = 90.0;
-      //else if (height <= 812 && height >= 750) {
-    } else if (height <= 812 && height >= 750) {
-      ///X iphone & 11 Pro
-      bottomPadding = 70.0;
-      bottomPaddingBlock = 120.0;
-    } else if (height <= 845 && height >= 840) {
-      ///12 iphone & 12 Pro
-      bottomPadding = 70.0;
-      bottomPaddingBlock = 120.0;
-    }
 
     double sizeImage = 0.95;
     double sizeBox = 50;
@@ -54,7 +19,6 @@ class SlideItem extends StatelessWidget {
     double sizeTextBottom = 2.7;
 
     if (height <= 670) {
-
       ///SE 2
       sizeImage = 0.75;
       sizeBox = 30;
@@ -82,10 +46,9 @@ class SlideItem extends StatelessWidget {
 
     return Opacity(
         opacity: index != 3 ? 1 : 0,
-        child:
-        ((){
-          if(index ==0 || index == 2){
-             return Column(
+        child: (() {
+          if (index == 0 || index == 2) {
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -115,16 +78,16 @@ class SlideItem extends StatelessWidget {
                                 style: TextStyle(
                                   color: Color(0xFF1D1D1D),
                                   fontFamily: "Phonk",
-                                  fontSize:
-                                  SizeConfig.heightMultiplier * sizeTextBottom,
+                                  fontSize: SizeConfig.heightMultiplier *
+                                      sizeTextBottom,
                                 )),
                             new TextSpan(
-                                text: index==0?'?':'',
+                                text: index == 0 ? '?' : '',
                                 style: TextStyle(
                                   color: Color(0xFF1D1D1D),
                                   fontFamily: "Poppins-ExtraBold",
-                                  fontSize:
-                                  SizeConfig.heightMultiplier * sizeTextBottom,
+                                  fontSize: SizeConfig.heightMultiplier *
+                                      sizeTextBottom,
                                 )),
                           ],
                         ),
@@ -143,7 +106,8 @@ class SlideItem extends StatelessWidget {
                           style: TextStyle(
                             color: Color(0xFF1D1D1D),
                             fontFamily: "Poppins-LightItalic",
-                            fontSize: SizeConfig.heightMultiplier * sizeTextMain,
+                            fontSize:
+                                SizeConfig.heightMultiplier * sizeTextMain,
                           ),
                         ))),
                 SizedBox(
@@ -154,26 +118,23 @@ class SlideItem extends StatelessWidget {
                 ),
               ],
             );
-          }else{
+          } else {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-
                 Align(
                   alignment: Alignment.centerLeft,
-                  child:Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
                       slideList[index].title,
                       textScaleFactor: 1.0,
                       style: TextStyle(
-                        color:  Color(0xFF1D1D1D),
+                        color: Color(0xFF1D1D1D),
                         fontFamily: "Phonk",
-
                         fontSize: SizeConfig.heightMultiplier * sizeTextBottom,
                       ),
-
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -183,20 +144,19 @@ class SlideItem extends StatelessWidget {
                 ),
                 Align(
                     alignment: Alignment.centerLeft,
-                    child:Padding(
+                    child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.0),
                         child: Text(
                           slideList[index].description,
                           textScaleFactor: 1.0,
                           style: TextStyle(
-                              color:  Color(0xFF1D1D1D),
-                              letterSpacing: 1.5,
-                              fontFamily: "Poppins-LightItalic",
-                              fontSize: SizeConfig.heightMultiplier * sizeTextMain,
-                              ),
-                        ))),
-
-
+                            color: Color(0xFF1D1D1D),
+                            letterSpacing: 1.5,
+                            fontFamily: "Poppins-LightItalic",
+                            fontSize:
+                                SizeConfig.heightMultiplier * sizeTextMain,
+                          ),
+                        ),),),
                 SizedBox(
                   height: sizeBox,
                 ),
@@ -211,9 +171,7 @@ class SlideItem extends StatelessWidget {
               ],
             );
           }
-        }())
-
-    );
+        }()),);
     // return Column(
     //   mainAxisAlignment:
     //   deviceSize == true

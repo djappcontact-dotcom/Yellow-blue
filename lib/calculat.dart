@@ -7,7 +7,6 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loanproject/state.dart';
-import 'package:loanproject/webview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +26,6 @@ class Calculat extends StatefulWidget {
 
 class _CalculatState extends State<Calculat> {
   bool _viewResult = false;
-  bool _oneChoose = false;
   TextEditingController _loanAmount = new TextEditingController();
   TextEditingController _loanTerms1 = new TextEditingController();
   TextEditingController _loanTerms2 = new TextEditingController();
@@ -55,11 +53,11 @@ class _CalculatState extends State<Calculat> {
       final _appState = Provider.of<AppState>(context, listen: false);
       Map userId = {'CUID': _appState.cuid};
       logEvent('GetLoan', userId);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => WebScreen()),
-      );
-      print('GNIDA open from click from CALCULATOR');
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => WebScreen()),
+      // );
+      // print('GNIDA open from click from CALCULATOR');
     });
   }
 
@@ -75,8 +73,10 @@ class _CalculatState extends State<Calculat> {
     bool result;
     try {
       result = await appsflyerSdk.logEvent(eventName, eventValues);
-    } on Exception catch (e) {}
-    print("Result logEvent: $result");
+    } on Exception catch (exception) {
+      print(exception);
+    }
+    return result;
   }
 
   @override
