@@ -36,7 +36,7 @@ dev_dependencies:
   appsflyer_sdk: ^6.2.3+2
   connectivity_plus: ^2.3.7
   #  webview_flutter: ^3.0.4
-  flutter_inappwebview: ^5.4.4+3
+  flutter_inappwebview: ^5.7.2+3
   flutter_svg: ^1.0.3
   flutter_test:
     sdk: flutter
