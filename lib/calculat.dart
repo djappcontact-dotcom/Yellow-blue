@@ -274,7 +274,7 @@ class _CalculatState extends State<Calculat> {
                                           Picker(
                                               adapter: PickerDataAdapter<
                                                       String>(
-                                                  pickerdata: JsonDecoder()
+                                                  pickerData: JsonDecoder()
                                                       .convert(
                                                           _getPickerValues())),
                                               changeToFirst: true,
@@ -459,7 +459,7 @@ class _CalculatState extends State<Calculat> {
                                           Picker(
                                               adapter: PickerDataAdapter<
                                                       String>(
-                                                  pickerdata: JsonDecoder()
+                                                  pickerData: JsonDecoder()
                                                       .convert(
                                                           _getPickerValues())),
                                               changeToFirst: true,

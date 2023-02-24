@@ -7,6 +7,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
 import 'package:provider/provider.dart';
@@ -214,7 +215,10 @@ class _WebScreenState extends State<WebScreen> {
                                   Icons.arrow_back_ios,
                                   color: Color(0xFF1D1D1D),
                                 ),
-                                onPressed: () => Navigator.of(context).pop(),
+                                onPressed: () => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage())),
                               ),
                             ],
                           ),
