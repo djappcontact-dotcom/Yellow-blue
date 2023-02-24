@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
       }
 
       _appState.checkCountOpen().then((value) {
-        if (value == 4) {
+        if (value == 3) {
           _requestReview();
           _appState.removeCountOpen();
         } else {

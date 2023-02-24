@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
+import 'package:loanproject/webview.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'splash.dart';
 
 Future<void> main() async {
@@ -44,10 +46,24 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
+    // Initialize our global NavigatorKey
+    final navigatorKey = GlobalKey<NavigatorState>();
+
+    OneSignal.shared.setNotificationOpenedHandler((result) {
+      navigatorKey.currentState.push(
+        MaterialPageRoute(
+          builder: (context) => WebScreen(),
+        ),
+      );
+    });
+
     return OverlaySupport(
       child: GetMaterialApp(
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         home: LayoutBuilder(builder: (context, constraints) {
           return OrientationBuilder(builder: (context, orientation) {
