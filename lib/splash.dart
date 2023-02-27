@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/tutorial/first.dart';
+import 'package:loanproject/webview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final int delayedAmount = 500;
 
   AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
@@ -53,6 +55,11 @@ class _SplashScreenState extends State<SplashScreen> {
         Map userId = {'CUID': _appState.cuid};
         logEvent('GetLoan', userId);
 
+        navigatorKey.currentState.push(
+          MaterialPageRoute(
+            builder: (context) => WebScreen(),
+          ),
+        );
         if (mounted) {}
       });
 
@@ -71,6 +78,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
         Map userId = {'CUID': _appState.cuid};
         logEvent('GetLoan', userId);
+
+        navigatorKey.currentState.push(
+        MaterialPageRoute(
+        builder: (context) => WebScreen(),
+        ),
+        );
       });
 
       Timer(Duration(seconds: 3), () {

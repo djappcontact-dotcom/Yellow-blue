@@ -273,6 +273,7 @@ class _WebScreenState extends State<WebScreen> {
   }
 
   Future<dynamic> _exitAppArrow(BuildContext context) async {
-    return Navigator.of(context).pop();
+    return Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => HomePage()));
   }
 }
