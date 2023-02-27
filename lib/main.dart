@@ -51,7 +51,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Initialize our global NavigatorKey
-    final navigatorKey = GlobalKey<NavigatorState>();
 
     OneSignal.shared.setNotificationOpenedHandler((result) {
       navigatorKey.currentState.push(
