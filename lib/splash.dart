@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/tutorial/first.dart';
-import 'package:loanproject/webview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:provider/provider.dart';
@@ -40,8 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     final _appState = Provider.of<AppState>(context, listen: false);
+
     if (Platform.isAndroid) {
       OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
@@ -51,15 +50,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
       OneSignal.shared.setNotificationOpenedHandler((notification) {
         _appState.setDarkMode(true);
-
         Map userId = {'CUID': _appState.cuid};
         logEvent('GetLoan', userId);
-
-        navigatorKey.currentState.push(
-          MaterialPageRoute(
-            builder: (context) => WebScreen(),
-          ),
-        );
+        Navigator.pushReplacementNamed(context, '/home');
+        Timer(Duration(milliseconds: 100),
+                () async => await Navigator.pushReplacementNamed(context, '/web'));
         if (mounted) {}
       });
 
@@ -75,15 +70,9 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       OneSignal.shared.setNotificationOpenedHandler((notification) {
         _appState.setDarkMode(true);
-
-        Map userId = {'CUID': _appState.cuid};
-        logEvent('GetLoan', userId);
-
-        navigatorKey.currentState.push(
-        MaterialPageRoute(
-        builder: (context) => WebScreen(),
-        ),
-        );
+        Navigator.pushReplacementNamed(context, '/home');
+        Timer(Duration(milliseconds: 100),
+                () async => await Navigator.pushReplacementNamed(context, '/web'));
       });
 
       Timer(Duration(seconds: 3), () {
@@ -134,7 +123,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

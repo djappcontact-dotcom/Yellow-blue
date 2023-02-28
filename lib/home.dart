@@ -53,6 +53,8 @@ class _HomePageState extends State<HomePage> {
     initApsSdk();
     super.initState();
     final _appState = Provider.of<AppState>(context, listen: false);
+    OneSignal.shared.promptUserForPushNotificationPermission();
+
     Timer(Duration(seconds: 1), () {
       if (Platform.isIOS) {
         getCheckNotificationPermStatus().then((value) {
@@ -64,6 +66,8 @@ class _HomePageState extends State<HomePage> {
             OneSignal.shared.setNotificationOpenedHandler((notification) {
               Map userId = {'CUID': _appState.cuid};
               logEvent('GetLoan', userId);
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => WebScreen()));
             });
           }
         });
@@ -71,6 +75,8 @@ class _HomePageState extends State<HomePage> {
         OneSignal.shared.setNotificationOpenedHandler((notification) {
           Map userId = {'CUID': _appState.cuid};
           logEvent('GetLoan', userId);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => WebScreen()));
         });
       }
 

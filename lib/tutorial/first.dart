@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -40,6 +41,9 @@ class _FirstTutorialState extends State<FirstTutorial> {
       final _appState = Provider.of<AppState>(context, listen: false);
       Map userId = {'CUID': _appState.cuid};
       logEvent('GetLoan', userId);
+      Navigator.pushReplacementNamed(context, '/home');
+      Timer(Duration(milliseconds: 100),
+          () async => await Navigator.pushReplacementNamed(context, '/web'));
     });
   }
 

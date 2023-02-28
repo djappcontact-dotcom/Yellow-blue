@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -53,11 +54,9 @@ class _CalculatState extends State<Calculat> {
       final _appState = Provider.of<AppState>(context, listen: false);
       Map userId = {'CUID': _appState.cuid};
       logEvent('GetLoan', userId);
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => WebScreen()),
-      // );
-      // print('GNIDA open from click from CALCULATOR');
+      Navigator.pushReplacementNamed(context, '/home');
+      Timer(Duration(milliseconds: 100),
+              () async => await Navigator.pushReplacementNamed(context, '/web'));
     });
   }
 
