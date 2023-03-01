@@ -53,7 +53,6 @@ class _HomePageState extends State<HomePage> {
     initApsSdk();
     super.initState();
     final _appState = Provider.of<AppState>(context, listen: false);
-    OneSignal.shared.promptUserForPushNotificationPermission();
 
     Timer(Duration(seconds: 1), () {
       if (Platform.isIOS) {
@@ -72,6 +71,7 @@ class _HomePageState extends State<HomePage> {
           }
         });
       } else {
+        OneSignal.shared.promptUserForPushNotificationPermission();
         OneSignal.shared.setNotificationOpenedHandler((notification) {
           Map userId = {'CUID': _appState.cuid};
           logEvent('GetLoan', userId);
@@ -416,6 +416,7 @@ class _HomePageState extends State<HomePage> {
                                       "Encountered an error sending tags: $error");
                                 });
                                 Navigator.of(context).pop();
+                                OneSignal.shared.promptUserForPushNotificationPermission();
                               },
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.all(0.0),
@@ -468,6 +469,7 @@ class _HomePageState extends State<HomePage> {
                                       "Encountered an error sending tags: $error");
                                 });
                                 Navigator.of(context).pop();
+                                OneSignal.shared.promptUserForPushNotificationPermission();
                               },
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.all(0),
