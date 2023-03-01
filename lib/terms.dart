@@ -11,10 +11,13 @@ class TermsPage extends StatefulWidget {
 }
 
 class _SimplePageState extends State<TermsPage> {
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    ImageProvider background = AssetImage('assets/images/back_privacy.png');
+
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(0.0), // here the desired height
@@ -26,7 +29,7 @@ class _SimplePageState extends State<TermsPage> {
           width: double.infinity,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/back_privacy.png'),
+              image: background,
               fit: BoxFit.fill,
             ),
           ),

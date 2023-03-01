@@ -42,7 +42,7 @@ class _FirstTutorialState extends State<FirstTutorial> {
       Map userId = {'CUID': _appState.cuid};
       logEvent('GetLoan', userId);
       Navigator.pushReplacementNamed(context, '/home');
-      Timer(Duration(milliseconds: 100),
+      Timer(Duration(microseconds: 10),
           () async => await Navigator.pushReplacementNamed(context, '/web'));
     });
   }

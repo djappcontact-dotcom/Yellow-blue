@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Map userId = {'CUID': _appState.cuid};
         logEvent('GetLoan', userId);
         Navigator.pushReplacementNamed(context, '/home');
-        Timer(Duration(milliseconds: 100),
+        Timer(Duration(milliseconds: 10),
                 () async => await Navigator.pushReplacementNamed(context, '/web'));
         if (mounted) {}
       });
@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
       OneSignal.shared.setNotificationOpenedHandler((notification) {
         _appState.setDarkMode(true);
         Navigator.pushReplacementNamed(context, '/home');
-        Timer(Duration(milliseconds: 100),
+        Timer(Duration(milliseconds: 10),
                 () async => await Navigator.pushReplacementNamed(context, '/web'));
       });
 

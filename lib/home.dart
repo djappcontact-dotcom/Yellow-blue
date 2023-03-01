@@ -153,6 +153,8 @@ class _HomePageState extends State<HomePage> {
       sizeBox = 20;
     }
 
+    ImageProvider background = AssetImage('assets/images/back_main.png');
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(0.0),
@@ -165,7 +167,7 @@ class _HomePageState extends State<HomePage> {
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/back_main.png'),
+            image: background,
             fit: BoxFit.fill,
           ),
         ),

@@ -49,6 +49,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    ///Preload background images to avoid load images on screens
+    precacheImage(AssetImage('assets/images/back_calculat.png'), context);
+    precacheImage(AssetImage('assets/images/back_privacy.png'), context);
+    precacheImage(AssetImage('assets/images/back_main.png'), context);
+
     return OverlaySupport(
       child: GetMaterialApp(
         navigatorKey: NavigationService.navigatorKey,
