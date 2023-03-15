@@ -21,3 +21,10 @@ storePassword=123456
 keyPassword=123456
 keyAlias=key
 storeFile=key
+
+Key properties updated:
+
+storePassword=YellowBlue
+keyPassword=YellowBlue
+keyAlias=upload
+storeFile=yellow-blue-keystore.jks
