@@ -14,15 +14,11 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:notification_permissions/notification_permissions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'calculat.dart';
 
-Map appsFlyerOptions = {
-  "afDevKey":
-      Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
-  "afAppId": '1570037577',
-  "isDebug": true
-};
+int counter;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -32,8 +28,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+  AppsflyerSdk appsflyerSdk = AppsflyerSdk({
+    "afDevKey":
+        Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
+    "afAppId": '1570037577',
+    "isDebug": true
+  });
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
   Random _rnd = Random();
@@ -46,11 +46,10 @@ class _HomePageState extends State<HomePage> {
 
   final InAppReview _inAppReview = InAppReview.instance;
 
-  Future<void> _requestReview() => _inAppReview.requestReview();
-
   @override
   void initState() {
     initApsSdk();
+    setCounter();
     super.initState();
     final _appState = Provider.of<AppState>(context, listen: false);
 
@@ -75,20 +74,26 @@ class _HomePageState extends State<HomePage> {
         OneSignal.shared.setNotificationOpenedHandler((notification) {
           Map userId = {'CUID': _appState.cuid};
           logEvent('GetLoan', userId);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => WebScreen()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => WebScreen()));
         });
       }
 
-      _appState.checkCountOpen().then((value) {
-        if (value == 3) {
-          _requestReview();
-          _appState.removeCountOpen();
-        } else {
-          _appState.setCountOpen();
+      if (counter == 3) {
+        if (_inAppReview.isAvailable() == true) {
+          _inAppReview.requestReview();
         }
-      });
+      }
     });
+  }
+
+  void setCounter() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    counter = pref.getInt("count");
+    //  pref.remove("count");
+    if (pref.getInt("count") == 4) {
+      pref.remove("count");
+    }
   }
 
   /// Checks the notification permission status
@@ -406,17 +411,23 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () async {
                                 Map userId = {'open': 'open'};
                                 logEvent('SpOfferYes', userId);
-                                OneSignal.shared
-                                    .sendTag("SpOfferYes", "SpOfferYes")
-                                    .then((response) {
-                                  print(
-                                      "Successfully sent tags with response: $response");
-                                }).catchError((error) {
-                                  print(
-                                      "Encountered an error sending tags: $error");
-                                });
                                 Navigator.of(context).pop();
-                                OneSignal.shared.promptUserForPushNotificationPermission();
+                                OneSignal.shared
+                                    .promptUserForPushNotificationPermission()
+                                    .then((accepted) {
+                                  if (accepted == true) {
+                                    logEvent('push_accepted', userId);
+                                    OneSignal.shared
+                                        .sendTag("SpOfferYes", "SpOfferYes")
+                                        .then((response) {
+                                      print(
+                                          "Successfully sent tags with response: $response");
+                                    }).catchError((error) {
+                                      print(
+                                          "Encountered an error sending tags: $error");
+                                    });
+                                  }
+                                });
                               },
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.all(0.0),
@@ -457,19 +468,14 @@ class _HomePageState extends State<HomePage> {
                             height: 50.0,
                             child: ElevatedButton(
                               onPressed: () async {
-                                Map userId = {'open': 'open'};
-                                logEvent('SpOfferYes', userId);
-                                OneSignal.shared
-                                    .sendTag("SpOfferYes", "SpOfferYes")
-                                    .then((response) {
-                                  print(
-                                      "Successfully sent tags with response: $response");
-                                }).catchError((error) {
-                                  print(
-                                      "Encountered an error sending tags: $error");
-                                });
                                 Navigator.of(context).pop();
-                                OneSignal.shared.promptUserForPushNotificationPermission();
+                                OneSignal.shared
+                                    .promptUserForPushNotificationPermission().then((accepted) {
+                                      if (accepted == true) {
+                                        Map userId = {'open': 'open'};
+                                        logEvent('push_accepted', userId);
+                                      }
+                                    });
                               },
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.all(0),

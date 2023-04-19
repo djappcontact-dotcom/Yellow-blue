@@ -29,7 +29,7 @@ class WebScreen extends StatefulWidget {
 
 class _WebScreenState extends State<WebScreen> {
   AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-  String _connectionStatus = 'Unknown';
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -43,8 +43,6 @@ class _WebScreenState extends State<WebScreen> {
 
   @override
   void initState() {
-    super.initState();
-
     initConnectivity();
     cuid = getRandomString(15);
     appsflyerSdk.initSdk(
@@ -52,7 +50,7 @@ class _WebScreenState extends State<WebScreen> {
         registerOnAppOpenAttributionCallback: true,
         registerOnDeepLinkingCallback: true);
     appsflyerSdk.setCustomerUserId(cuid);
-
+    super.initState();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
@@ -73,20 +71,9 @@ class _WebScreenState extends State<WebScreen> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    switch (result) {
-      case ConnectivityResult.wifi:
-      case ConnectivityResult.mobile:
-        setState(() {
-          _connectionStatus = result.toString();
-        });
-        break;
-      case ConnectivityResult.none:
-        setState(() => _connectionStatus = result.toString());
-        break;
-      default:
-        setState(() => _connectionStatus = 'Failed to get connectivity.');
-        break;
-    }
+    setState(() {
+      _connectionStatus = result;
+    });
   }
 
   @override
@@ -116,12 +103,13 @@ class _WebScreenState extends State<WebScreen> {
       _osidCheck = _appState.osid;
     }
     return WillPopScope(
-      onWillPop: () => _exitAppArrow(context),
+      onWillPop: () => Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => HomePage())),
       child: StreamBuilder<ConnectivityResult>(
         stream: Connectivity().onConnectivityChanged,
         builder: (context, _) {
           print(_connectionStatus);
-          if (_connectionStatus != 'ConnectivityResult.none') {
+          if (_connectionStatus != ConnectivityResult.none) {
             return Scaffold(
               extendBodyBehindAppBar: true,
               appBar: PreferredSize(
@@ -132,7 +120,8 @@ class _WebScreenState extends State<WebScreen> {
                       leading: GestureDetector(
                         child: Icon(Icons.arrow_back_ios,
                             color: Color.fromRGBO(208, 201, 214, 1)),
-                        onTap: () => _exitAppArrow(context),
+                        onTap: () => Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => HomePage())),
                       ),
                       systemOverlayStyle: SystemUiOverlayStyle.dark)),
               body: InAppWebView(
@@ -270,10 +259,5 @@ class _WebScreenState extends State<WebScreen> {
         },
       ),
     );
-  }
-
-  Future<dynamic> _exitAppArrow(BuildContext context) async {
-    return Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => HomePage()));
   }
 }

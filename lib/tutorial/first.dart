@@ -12,12 +12,6 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import '../state.dart';
 
-Map appsFlyerOptions = {
-  "afDevKey":
-      Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
-  "afAppId": '1570037577',
-  "isDebug": true
-};
 
 class FirstTutorial extends StatefulWidget {
   const FirstTutorial({Key key}) : super(key: key);
@@ -27,7 +21,12 @@ class FirstTutorial extends StatefulWidget {
 }
 
 class _FirstTutorialState extends State<FirstTutorial> {
-  AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+  AppsflyerSdk appsflyerSdk = AppsflyerSdk({
+    "afDevKey":
+    Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
+    "afAppId": '1570037577',
+    "isDebug": true
+  });
   int _currentPage = 0;
   String _back = 'assets/images/img_backon1.png';
   String _backButton = 'assets/images/button1.svg';

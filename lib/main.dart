@@ -10,11 +10,13 @@ import 'package:loanproject/webview.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 import 'splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  final SharedPreferences pref = await SharedPreferences.getInstance();
   if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
 
@@ -38,6 +40,14 @@ Future<void> main() async {
   }
   final state = AppState();
 
+  if (pref.getInt("count") == null) {
+     pref.setInt("count", 0);
+  } else {
+    var _count = pref.getInt("count");
+    _count = _count + 1;
+    pref.setInt("count", _count);
+  }
+
   runApp(
     MultiProvider(
         providers: [ChangeNotifierProvider<AppState>.value(value: state)],
@@ -46,10 +56,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     ///Preload background images to avoid load images on screens
     precacheImage(AssetImage('assets/images/back_calculat.png'), context);
     precacheImage(AssetImage('assets/images/back_privacy.png'), context);

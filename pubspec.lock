@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   appsflyer_sdk:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: appsflyer_sdk
       sha256: bba6e9302f4ebac2e45a1b149874fca8b340d145e4c1011286d4776bf6e9ad4c
@@ -66,7 +66,7 @@ packages:
     source: hosted
     version: "1.17.0"
   connectivity_plus:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: connectivity_plus
       sha256: "3f8fe4e504c2d33696dac671a54909743bc6a902a9bb0902306f7a2aed7e528e"
@@ -175,7 +175,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_inappwebview:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_inappwebview
       sha256: f73505c792cf083d5566e1a94002311be497d984b5607f25be36d685cf6361cf
@@ -191,7 +191,7 @@ packages:
     source: hosted
     version: "2.1.0"
   flutter_svg:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_svg
       sha256: c9bb2757b8a0bbf8e45f4069a90d2b9dbafc80b1a5e28d43e29088be533e6df4
@@ -209,7 +209,7 @@ packages:
     source: sdk
     version: "0.0.0"
   fluttertoast:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: fluttertoast
       sha256: "2f9c4d3f4836421f7067a28f8939814597b27614e021da9d63e5d3fb6e212d25"
@@ -217,7 +217,7 @@ packages:
     source: hosted
     version: "8.2.1"
   get:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: get
       sha256: e476dffba6f181fd7f48e9785fe000923392644ecd2b10365b631eef440ee833
@@ -225,7 +225,7 @@ packages:
     source: hosted
     version: "3.26.0"
   in_app_review:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: in_app_review
       sha256: "16328b8202d36522322b95804ae5d975577aa9f584d634985849ba1099645850"
@@ -241,7 +241,7 @@ packages:
     source: hosted
     version: "2.0.4"
   intl:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: intl
       sha256: "4691515bb3f68ebbc4776bc97a84d429bb8e8c141a77b5ab988a4b02adb1747a"
@@ -257,7 +257,7 @@ packages:
     source: hosted
     version: "0.6.5"
   lottie:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: lottie
       sha256: "893da7a0022ec2fcaa616f34529a081f617e86cc501105b856e5a3184c58c7c2"
@@ -281,7 +281,7 @@ packages:
     source: hosted
     version: "0.2.0"
   material_dialogs:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: material_dialogs
       sha256: "95aad85a91f85774347c479002dae22f5c9a4b97fb619557461ef27a58eb8fcc"
@@ -305,7 +305,7 @@ packages:
     source: hosted
     version: "1.0.0"
   nm:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: nm
       sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
@@ -313,7 +313,7 @@ packages:
     source: hosted
     version: "0.5.0"
   notification_permissions:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: notification_permissions
       sha256: e62e7fbd4b64941764778fc957224567aff10cdc8b0227046bd0a4b9db7b47a6
@@ -321,7 +321,7 @@ packages:
     source: hosted
     version: "0.6.1"
   onesignal_flutter:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: onesignal_flutter
       sha256: "4b6d1be59783d028b9949fc4a417888fb202c405db47e9c26debb6c724a2c632"
@@ -329,7 +329,7 @@ packages:
     source: hosted
     version: "3.5.0"
   overlay_support:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: overlay_support
       sha256: fc39389bfd94e6985e1e13b2a88a125fc4027608485d2d4e2847afe1b2bb339c
@@ -425,23 +425,15 @@ packages:
     source: hosted
     version: "4.2.4"
   provider:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: provider
       sha256: af58e866ea76fa7d156ea5e6ffa1c28b52dabff5c87fbdf265f7c6adaa7a741d
       url: "https://pub.dev"
     source: hosted
     version: "4.3.3"
-  rxdart:
-    dependency: "direct dev"
-    description:
-      name: rxdart
-      sha256: c7cd7ceed33a8fdf7333f29058af577ae71be670132a70b013084b30e0d9e3c3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.25.0"
   shared_preferences:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: shared_preferences
       sha256: ee6257848f822b8481691f20c3e6d2bfee2e9eccb2a3d249907fcfb198c55b41
@@ -646,7 +638,7 @@ packages:
     source: hosted
     version: "1.0.0"
   xml:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: xml
       sha256: "80d494c09849dc3f899d227a78c30c5b949b985ededf884cb3f3bcd39f4b447a"
