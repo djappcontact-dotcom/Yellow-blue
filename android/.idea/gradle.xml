@@ -9,20 +9,19 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/appsflyer_sdk-6.8.2/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/connectivity_plus-2.3.7/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.9/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/in_app_review-2.0.4/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/notification_permissions-0.6.1/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/onesignal_flutter-3.4.1/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences_android-2.0.13/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/url_launcher_android-6.0.19/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/webview_flutter-1.0.7/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/appsflyer_sdk-6.9.3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/connectivity_plus-3.0.4/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_inappwebview-5.7.2+3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/fluttertoast-8.2.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/in_app_review-2.0.6/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/notification_permissions-0.6.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/onesignal_flutter-3.5.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/shared_preferences_android-2.1.2/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/url_launcher_android-6.0.27/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

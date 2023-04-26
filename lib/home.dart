@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:loanproject/privacy.dart';
 import 'package:loanproject/terms.dart';
+import 'package:lottie/lottie.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
@@ -53,13 +54,18 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     final _appState = Provider.of<AppState>(context, listen: false);
 
-    Timer(Duration(seconds: 1), () {
-      if (Platform.isIOS) {
-        getCheckNotificationPermStatus().then((value) {
+    Timer(Duration(seconds: 1), () async {
+      if (counter == 0) {
+        getCheckNotificationPermStatus().then((value) async {
           print(value);
           if (value != "granted") {
             WidgetsBinding.instance
                 .addPostFrameCallback((_) => yourFunction(context));
+            final SharedPreferences pref =
+                await SharedPreferences.getInstance();
+            if (pref.getInt("count") == 0) {
+              pref.setInt("count", 1);
+            }
           } else {
             OneSignal.shared.setNotificationOpenedHandler((notification) {
               Map userId = {'CUID': _appState.cuid};
@@ -69,29 +75,25 @@ class _HomePageState extends State<HomePage> {
             });
           }
         });
-      } else {
-        OneSignal.shared.promptUserForPushNotificationPermission();
-        OneSignal.shared.setNotificationOpenedHandler((notification) {
-          Map userId = {'CUID': _appState.cuid};
-          logEvent('GetLoan', userId);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => WebScreen()));
-        });
       }
-
       if (counter == 3) {
         if (_inAppReview.isAvailable() == true) {
           _inAppReview.requestReview();
         }
       }
     });
+    OneSignal.shared.setNotificationOpenedHandler((notification) {
+              Map userId = {'CUID': _appState.cuid};
+              logEvent('GetLoan', userId);
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => WebScreen()));
+            });
   }
 
   void setCounter() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     counter = pref.getInt("count");
-    //  pref.remove("count");
-    if (pref.getInt("count") == 4) {
+    if (pref.getInt("count") == 5) {
       pref.remove("count");
     }
   }
@@ -470,12 +472,13 @@ class _HomePageState extends State<HomePage> {
                               onPressed: () async {
                                 Navigator.of(context).pop();
                                 OneSignal.shared
-                                    .promptUserForPushNotificationPermission().then((accepted) {
-                                      if (accepted == true) {
-                                        Map userId = {'open': 'open'};
-                                        logEvent('push_accepted', userId);
-                                      }
-                                    });
+                                    .promptUserForPushNotificationPermission()
+                                    .then((accepted) {
+                                  if (accepted == true) {
+                                    Map userId = {'open': 'open'};
+                                    logEvent('push_accepted', userId);
+                                  }
+                                });
                               },
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.all(0),

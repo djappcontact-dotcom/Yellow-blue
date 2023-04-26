@@ -4,14 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import '../home.dart';
 import '../models/slide.dart';
 import '../models/slide_item.dart';
 import '../size_config.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import '../state.dart';
-
 
 class FirstTutorial extends StatefulWidget {
   const FirstTutorial({Key key}) : super(key: key);
@@ -23,7 +21,7 @@ class FirstTutorial extends StatefulWidget {
 class _FirstTutorialState extends State<FirstTutorial> {
   AppsflyerSdk appsflyerSdk = AppsflyerSdk({
     "afDevKey":
-    Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
+        Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
     "afAppId": '1570037577',
     "isDebug": true
   });
@@ -54,10 +52,7 @@ class _FirstTutorialState extends State<FirstTutorial> {
 
   _onPageChanged(int index) {
     if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      Navigator.pushNamed(context, '/home');
     }
     setState(() {
       _currentPage = index;
@@ -232,11 +227,7 @@ class _FirstTutorialState extends State<FirstTutorial> {
                               });
                             }
                           } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
+                            Navigator.pushNamed(context, '/home');
                           }
                         },
                         child: SvgPicture.asset(_backButton))),
@@ -245,10 +236,7 @@ class _FirstTutorialState extends State<FirstTutorial> {
                 alignment: Alignment.bottomLeft,
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
+                    Navigator.pushNamed(context, '/home');
                   },
                   child: Padding(
                     padding: EdgeInsets.only(

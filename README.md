@@ -22,9 +22,7 @@ keyPassword=123456
 keyAlias=key
 storeFile=key
 
-Key properties updated:
 
-storePassword=YellowBlue
-keyPassword=YellowBlue
-keyAlias=upload
-storeFile=yellow-blue-keystore.jks
+org.gradle.jvmargs=-Xmx1536M
+classpath 'com.android.tools.build:gradle:7.1.2'
+distributionUrl=https\://services.gradle.org/distributions/gradle-7.4-all.zip
