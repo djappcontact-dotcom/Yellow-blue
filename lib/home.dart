@@ -48,6 +48,32 @@ class _HomePageState extends State<HomePage> {
   final InAppReview _inAppReview = InAppReview.instance;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    ///Preload background images to avoid load images on screens
+    precacheImage(AssetImage('assets/images/back_calculat.png'), context);
+    precacheImage(AssetImage('assets/images/back_privacy.png'), context);
+    precacheImage(AssetImage('assets/images/back_main.png'), context);
+    precacheImage(AssetImage('assets/images/no_inet.png'), context);
+    precacheImage(AssetImage('assets/images/second_back_img.png'), context);
+    precacheImage(AssetImage('assets/images/three_image.png'), context);
+    precacheImage(AssetImage('assets/images/img_rectangle3.png'), context);
+    precacheImage(
+        AssetImage('assets/images/img_rectangle2_blue_200.png'), context);
+    precacheImage(AssetImage('assets/images/img_maskgroup.png'), context);
+    precacheImage(AssetImage('assets/images/back_privacy.png'), context);
+    precacheImage(AssetImage('assets/images/back_main.png'), context);
+    precacheImage(AssetImage('assets/images/image_not_found.png'), context);
+    precacheImage(AssetImage('assets/images/buttontry.png'), context);
+    precacheImage(AssetImage('assets/images/button_next.png'), context);
+    precacheImage(AssetImage('assets/images/button_calc.png'), context);
+    precacheImage(AssetImage('assets/images/back_three.png'), context);
+    precacheImage(AssetImage('assets/images/back_sec.png'), context);
+    precacheImage(AssetImage('assets/images/img_backon1.png'), context);
+  }
+
+  @override
   void initState() {
     initApsSdk();
     setCounter();
@@ -83,11 +109,11 @@ class _HomePageState extends State<HomePage> {
       }
     });
     OneSignal.shared.setNotificationOpenedHandler((notification) {
-              Map userId = {'CUID': _appState.cuid};
-              logEvent('GetLoan', userId);
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => WebScreen()));
-            });
+      Map userId = {'CUID': _appState.cuid};
+      logEvent('GetLoan', userId);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => WebScreen()));
+    });
   }
 
   void setCounter() async {
@@ -170,8 +196,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: Container(
-        height: double.infinity,
-        width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: background,
@@ -355,165 +379,144 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.only(top: 0, bottom: 40),
           margin: EdgeInsets.only(top: 100),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF434343),
-                    Color(0xFF202020),
-                  ])),
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF434343),
+                Color(0xFF202020),
+              ],
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-            child: Stack(children: <Widget>[
+            child: Stack(children: [
               Align(
-                  alignment: Alignment.topCenter,
-                  child: SvgPicture.asset(
-                    'assets/images/confeti.svg',
-                  )),
+                alignment: Alignment.topCenter,
+                child: SvgPicture.asset(
+                  'assets/images/confeti.svg',
+                ),
+              ),
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Opacity(
-                    opacity: 0,
-                    child: Container(
-                        padding: EdgeInsets.only(top: 55),
-                        child: Text(
-                          'Do you want to be aware of exclusive loan offers?',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color(0xFFFAFF00),
-                            fontSize: 21.0,
-                            fontFamily: 'Poppins-ExtraBold',
-                          ),
-                        )),
-                  ),
-                  Container(
-                      padding: EdgeInsets.only(top: 10),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 125),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
                       child: Text(
-                        'Do you want to be aware of exclusive loan offers?',
+                        'Do you want to be aware \nof exclusive loan offers?',
+                        maxLines: 2,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFFFAFF00),
                           fontSize: 21.0,
                           fontFamily: 'Poppins-ExtraBold',
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                   Padding(
-                      padding: EdgeInsets.only(top: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        //Center Row contents horizontally,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            height: 50.0,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                Map userId = {'open': 'open'};
-                                logEvent('SpOfferYes', userId);
-                                Navigator.of(context).pop();
-                                OneSignal.shared
-                                    .promptUserForPushNotificationPermission()
-                                    .then((accepted) {
-                                  if (accepted == true) {
-                                    logEvent('push_accepted', userId);
-                                    OneSignal.shared
-                                        .sendTag("SpOfferYes", "SpOfferYes")
-                                        .then((response) {
-                                      print(
-                                          "Successfully sent tags with response: $response");
-                                    }).catchError((error) {
-                                      print(
-                                          "Encountered an error sending tags: $error");
-                                    });
-                                  }
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.all(0.0),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                        colors: [
-                                          Color(0xFFFAFF00),
-                                          Color(0xFF92D2FF),
-                                        ]),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: Container(
-                                  constraints: BoxConstraints(
-                                      maxWidth: 130.0, minHeight: 150.0),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "YES",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 21.0,
-                                      fontFamily: 'Poppins-Bold',
-                                    ),
+                    padding: EdgeInsets.only(top: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //Center Row contents horizontally,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              Map userId = {'open': 'open'};
+                              logEvent('SpOfferYes', userId);
+                              Navigator.of(context).pop();
+                              OneSignal.shared
+                                  .promptUserForPushNotificationPermission()
+                                  .then((accepted) {
+                                if (accepted == true) {
+                                  logEvent('push_accepted', userId);
+                                  OneSignal.shared
+                                      .sendTag("SpOfferYes", "SpOfferYes")
+                                      .then((response) {
+                                    print(
+                                        "Successfully sent tags with response: $response");
+                                  }).catchError((error) {
+                                    print(
+                                        "Encountered an error sending tags: $error");
+                                  });
+                                }
+                              });
+                            },
+                            child: Container(
+                              height: 50.0,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [
+                                        Color(0xFFFAFF00),
+                                        Color(0xFF92D2FF),
+                                      ]),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Center(
+                                child: Text(
+                                  "YES",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 21.0,
+                                    fontFamily: 'Poppins-Bold',
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            height: 50.0,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                OneSignal.shared
-                                    .promptUserForPushNotificationPermission()
-                                    .then((accepted) {
-                                  if (accepted == true) {
-                                    Map userId = {'open': 'open'};
-                                    logEvent('push_accepted', userId);
-                                  }
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.all(0),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                        colors: [
-                                          Color(0xFFFAFF00),
-                                          Color(0xFF92D2FF),
-                                        ]),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: Container(
-                                  constraints: BoxConstraints(
-                                      maxWidth: 130.0, minHeight: 150.0),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "NO",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 21.0,
-                                      fontFamily: 'Poppins-Bold',
-                                    ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              OneSignal.shared
+                                  .promptUserForPushNotificationPermission()
+                                  .then((accepted) {
+                                if (accepted == true) {
+                                  Map userId = {'open': 'open'};
+                                  logEvent('push_accepted', userId);
+                                }
+                              });
+                            },
+                            child: Container(
+                              height: 50.0,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [
+                                        Color(0xFFFAFF00),
+                                        Color(0xFF92D2FF),
+                                      ]),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Center(
+                                child: Text(
+                                  "NO",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 21.0,
+                                    fontFamily: 'Poppins-Bold',
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      )),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               )
             ]),
@@ -522,7 +525,7 @@ class _HomePageState extends State<HomePage> {
         Align(
           alignment: Alignment.topCenter,
           child: Container(
-            // padding: EdgeInsets.only(top: 15),
+            padding: EdgeInsets.only(top: 15),
             child: SvgPicture.asset(
               'assets/images/CheckCircle.svg',
               fit: BoxFit.contain,

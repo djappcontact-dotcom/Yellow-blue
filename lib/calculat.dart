@@ -140,12 +140,12 @@ class _CalculatState extends State<Calculat> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(
-                            left: width * 0.03,
+                            left: 16,
                             top: height * sizeTop,
-                            right: width * 0.1),
+                            right: 16),
                         child: Column(children: <Widget>[
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Opacity(
                                   opacity: 1,
@@ -170,7 +170,7 @@ class _CalculatState extends State<Calculat> {
                                     color: Color(0xFF1D1D1D),
                                     fontFamily: "Phonk",
                                     fontSize:
-                                        SizeConfig.heightMultiplier * sizeTitle,
+                                        24,
                                   )),
                             ],
                           ),

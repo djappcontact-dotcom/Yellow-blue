@@ -30,6 +30,29 @@ class _FirstTutorialState extends State<FirstTutorial> {
   String _backButton = 'assets/images/button1.svg';
   final PageController _pageController = PageController(initialPage: 0);
 
+@override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+      precacheImage(AssetImage(_back), context);
+      precacheImage(AssetImage('assets/images/back_calculat.png'), context);
+    precacheImage(AssetImage('assets/images/back_privacy.png'), context);
+    precacheImage(AssetImage('assets/images/back_main.png'), context);
+    precacheImage(AssetImage('assets/images/no_inet.png'), context);
+    precacheImage(AssetImage('assets/images/second_back_img.png'), context);
+    precacheImage(AssetImage('assets/images/three_image.png'), context);
+    precacheImage(AssetImage('assets/images/img_rectangle3.png'), context);
+    precacheImage(AssetImage('assets/images/img_rectangle2_blue_200.png'), context);
+    precacheImage(AssetImage('assets/images/img_maskgroup.png'), context);
+    precacheImage(AssetImage('assets/images/back_privacy.png'), context);
+    precacheImage(AssetImage('assets/images/back_main.png'), context);
+    precacheImage(AssetImage('assets/images/image_not_found.png'), context);
+    precacheImage(AssetImage('assets/images/buttontry.png'), context);
+    precacheImage(AssetImage('assets/images/button_next.png'), context);
+    precacheImage(AssetImage('assets/images/button_calc.png'), context);
+    precacheImage(AssetImage('assets/images/back_three.png'), context);
+    precacheImage(AssetImage('assets/images/back_sec.png'), context);
+    precacheImage(AssetImage('assets/images/img_backon1.png'), context);
+  }
   @override
   void initState() {
     super.initState();
