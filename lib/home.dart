@@ -19,10 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'calculat.dart';
 
-int counter;
+int counter = 0;
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -118,14 +118,14 @@ class _HomePageState extends State<HomePage> {
 
   void setCounter() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    counter = pref.getInt("count");
+    counter = pref.getInt("count")??0;
     if (pref.getInt("count") == 5) {
       pref.remove("count");
     }
   }
 
   /// Checks the notification permission status
-  Future<String> getCheckNotificationPermStatus() {
+  Future<String?> getCheckNotificationPermStatus() {
     var permGranted = "granted";
     var permDenied = "denied";
     var permUnknown = "unknown";
@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
     appsflyerSdk.getAppsFlyerUID().then((value) {
       print(value);
       _appState.setCUID(cuid);
-      _appState.setID(value);
+      _appState.setID(value??'null');
     });
   }
 
@@ -362,8 +362,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<bool> logEvent(String eventName, Map eventValues) async {
-    bool result;
+  Future<bool?> logEvent(String eventName, Map eventValues) async {
+    bool? result;
     try {
       result = await appsflyerSdk.logEvent(eventName, eventValues);
     } on Exception catch (exception) {

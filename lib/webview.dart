@@ -21,7 +21,7 @@ Map appsFlyerOptions = {
 };
 
 class WebScreen extends StatefulWidget {
-  const WebScreen({Key key}) : super(key: key);
+  const WebScreen({Key? key}) : super(key: key);
 
   @override
   _WebScreenState createState() => _WebScreenState();
@@ -31,7 +31,7 @@ class _WebScreenState extends State<WebScreen> {
   AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
   Random _rnd = Random();
@@ -78,13 +78,13 @@ class _WebScreenState extends State<WebScreen> {
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel();
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 
   final GlobalKey webViewKey = GlobalKey();
 
-  InAppWebViewController webViewController;
+  InAppWebViewController? webViewController;
   final InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
     android: AndroidInAppWebViewOptions(
       useHybridComposition: true,
@@ -100,11 +100,14 @@ class _WebScreenState extends State<WebScreen> {
     final _appState = Provider.of<AppState>(context, listen: false);
 
     if (_appState.osid != null) {
-      _osidCheck = _appState.osid;
+      _osidCheck = _appState.osid ?? 'null';
     }
     return WillPopScope(
-      onWillPop: () => Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => HomePage())),
+      onWillPop: () {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+        return Future.value(false);
+      },
       child: StreamBuilder<ConnectivityResult>(
         stream: Connectivity().onConnectivityChanged,
         builder: (context, _) {
@@ -120,8 +123,10 @@ class _WebScreenState extends State<WebScreen> {
                       leading: GestureDetector(
                         child: Icon(Icons.arrow_back_ios,
                             color: Color.fromRGBO(208, 201, 214, 1)),
-                        onTap: () => Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => HomePage())),
+                        onTap: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => HomePage())),
                       ),
                       systemOverlayStyle: SystemUiOverlayStyle.dark)),
               body: InAppWebView(
@@ -129,15 +134,15 @@ class _WebScreenState extends State<WebScreen> {
                 initialUrlRequest: URLRequest(
                     url: Uri.parse(Platform.isAndroid
                         ? "https://samedayfin.com/YB-app-gp.php?CUID=" +
-                            _appState.cuid +
+                            (_appState.cuid ?? 'null') +
                             "&AFID=" +
-                            _appState.id +
+                            (_appState.id ?? 'null') +
                             "&OSID=" +
                             _osidCheck
                         : "https://samedayfin.com/YB-app-as.php?CUID=" +
-                            _appState.cuid +
+                            (_appState.cuid ?? 'null') +
                             "&AFID=" +
-                            _appState.id +
+                            (_appState.id ?? 'null') +
                             "&OSID=" +
                             _osidCheck)),
                 initialOptions: options,

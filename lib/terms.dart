@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
 
 class TermsPage extends StatefulWidget {
-  const TermsPage({Key key}) : super(key: key);
+  const TermsPage({Key? key}) : super(key: key);
 
   @override
   _SimplePageState createState() => _SimplePageState();

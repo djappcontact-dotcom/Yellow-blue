@@ -12,8 +12,8 @@ class AppState extends ChangeNotifier {
   }
 
   ///CUID
-  String _cuid;
-  String get cuid => _cuid;
+  String? _cuid;
+  String? get cuid => _cuid;
   void setCUID(String tkn) {
     _cuid = tkn;
     Future.delayed(Duration.zero, () {
@@ -21,8 +21,8 @@ class AppState extends ChangeNotifier {
     });
   }
 
-  String _osid;
-  String get osid => _osid;
+  String? _osid;
+  String? get osid => _osid;
   void setOSID(String tkn) {
     _osid = tkn;
     Future.delayed(Duration.zero, () {
@@ -31,8 +31,8 @@ class AppState extends ChangeNotifier {
   }
 
   ///ID
-  String _id;
-  String get id => _id;
+  String? _id;
+  String? get id => _id;
   void setID(String tkn) {
     _id = tkn;
     Future.delayed(Duration.zero, () {

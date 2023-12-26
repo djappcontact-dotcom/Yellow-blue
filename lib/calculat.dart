@@ -19,7 +19,7 @@ Map appsFlyerOptions = {
 };
 
 class Calculat extends StatefulWidget {
-  const Calculat({Key key}) : super(key: key);
+  const Calculat({Key? key}) : super(key: key);
 
   @override
   State<Calculat> createState() => _CalculatState();
@@ -68,8 +68,8 @@ class _CalculatState extends State<Calculat> {
     return '''$arr''';
   }
 
-  Future<bool> logEvent(String eventName, Map eventValues) async {
-    bool result;
+  Future<bool?> logEvent(String eventName, Map eventValues) async {
+    bool? result;
     try {
       result = await appsflyerSdk.logEvent(eventName, eventValues);
     } on Exception catch (exception) {
@@ -81,34 +81,28 @@ class _CalculatState extends State<Calculat> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
 
     double sizePadding = 1.8;
-    double sizeTitle = 3.5;
 
     double sizeTop = 0.07;
     print(height);
     if (height <= 670) {
       sizePadding = 2.0;
       sizeTop = 0.05;
-      sizeTitle = 3.0;
     } else if (height <= 811 && height >= 671) {
       sizePadding = 1.8;
       // sizePadding = 2.0;
       sizeTop = 0.05;
-      sizeTitle = 3.0;
     }
 
     if (Platform.isIOS) {
       if (height <= 900 && height >= 812) {
-        sizeTitle = 2.8;
         sizeTop = 0.05;
       }
     }
 
     if (Platform.isAndroid) {
       if (height <= 846 && height >= 842) {
-        sizeTitle = 2.8;
         sizeTop = 0.02;
       }
     }

@@ -41,10 +41,10 @@ Future<void> main() async {
   final state = AppState();
 
   if (pref.getInt("count") == null) {
-     pref.setInt("count", 0);
+    pref.setInt("count", 0);
   } else {
     var _count = pref.getInt("count");
-    _count = _count + 1;
+    _count = _count ?? 0 + 1;
     pref.setInt("count", _count);
   }
 
@@ -66,7 +66,8 @@ class MyApp extends StatelessWidget {
     precacheImage(AssetImage('assets/images/second_back_img.png'), context);
     precacheImage(AssetImage('assets/images/three_image.png'), context);
     precacheImage(AssetImage('assets/images/img_rectangle3.png'), context);
-    precacheImage(AssetImage('assets/images/img_rectangle2_blue_200.png'), context);
+    precacheImage(
+        AssetImage('assets/images/img_rectangle2_blue_200.png'), context);
     precacheImage(AssetImage('assets/images/img_maskgroup.png'), context);
     precacheImage(AssetImage('assets/images/back_privacy.png'), context);
     precacheImage(AssetImage('assets/images/back_main.png'), context);
@@ -77,7 +78,6 @@ class MyApp extends StatelessWidget {
     precacheImage(AssetImage('assets/images/back_three.png'), context);
     precacheImage(AssetImage('assets/images/back_sec.png'), context);
     precacheImage(AssetImage('assets/images/img_backon1.png'), context);
-
 
     return OverlaySupport(
       child: GetMaterialApp(

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class Slide {
   final String imageUrl;
@@ -6,9 +5,9 @@ class Slide {
   final String description;
 
   Slide({
-    @required this.imageUrl,
-    @required this.title,
-    @required this.description,
+    required this.imageUrl,
+    required this.title,
+    required this.description,
   });
 }
 

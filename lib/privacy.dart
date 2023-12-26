@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
 
 class PrivacyPage extends StatefulWidget {
-  const PrivacyPage({Key key}) : super(key: key);
+  const PrivacyPage({Key? key}) : super(key: key);
 
   @override
   _SimplePageState createState() => _SimplePageState();

@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import '../state.dart';
 
 class FirstTutorial extends StatefulWidget {
-  const FirstTutorial({Key key}) : super(key: key);
+  const FirstTutorial({Key? key}) : super(key: key);
 
   @override
   State<FirstTutorial> createState() => _FirstTutorialState();
@@ -30,18 +30,19 @@ class _FirstTutorialState extends State<FirstTutorial> {
   String _backButton = 'assets/images/button1.svg';
   final PageController _pageController = PageController(initialPage: 0);
 
-@override
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-      precacheImage(AssetImage(_back), context);
-      precacheImage(AssetImage('assets/images/back_calculat.png'), context);
+    precacheImage(AssetImage(_back), context);
+    precacheImage(AssetImage('assets/images/back_calculat.png'), context);
     precacheImage(AssetImage('assets/images/back_privacy.png'), context);
     precacheImage(AssetImage('assets/images/back_main.png'), context);
     precacheImage(AssetImage('assets/images/no_inet.png'), context);
     precacheImage(AssetImage('assets/images/second_back_img.png'), context);
     precacheImage(AssetImage('assets/images/three_image.png'), context);
     precacheImage(AssetImage('assets/images/img_rectangle3.png'), context);
-    precacheImage(AssetImage('assets/images/img_rectangle2_blue_200.png'), context);
+    precacheImage(
+        AssetImage('assets/images/img_rectangle2_blue_200.png'), context);
     precacheImage(AssetImage('assets/images/img_maskgroup.png'), context);
     precacheImage(AssetImage('assets/images/back_privacy.png'), context);
     precacheImage(AssetImage('assets/images/back_main.png'), context);
@@ -53,6 +54,7 @@ class _FirstTutorialState extends State<FirstTutorial> {
     precacheImage(AssetImage('assets/images/back_sec.png'), context);
     precacheImage(AssetImage('assets/images/img_backon1.png'), context);
   }
+
   @override
   void initState() {
     super.initState();
@@ -99,8 +101,8 @@ class _FirstTutorialState extends State<FirstTutorial> {
         registerOnDeepLinkingCallback: true);
   }
 
-  Future<bool> logEvent(String eventName, Map eventValues) async {
-    bool result;
+  Future<bool?> logEvent(String eventName, Map eventValues) async {
+    bool? result;
     try {
       result = await appsflyerSdk.logEvent(eventName, eventValues);
     } on Exception catch (exception) {
@@ -218,9 +220,9 @@ class _FirstTutorialState extends State<FirstTutorial> {
                         bottom: bottomPadding, right: width * 0.08),
                     child: InkWell(
                         onTap: () async {
-                          if (_pageController.page.toInt() != 3) {
+                          if (_pageController.page?.toInt() != 3) {
                             _pageController.animateToPage(
-                                _pageController.page.toInt() + 1,
+                                _pageController.page?.toInt() ?? 0 + 1,
                                 duration: Duration(milliseconds: 200),
                                 curve: Curves.easeOut);
 

@@ -65,8 +65,8 @@ class _SplashScreenState extends State<SplashScreen> {
       });
   }
 
-  Future<bool> logEvent(String eventName, Map eventValues) async {
-    bool result;
+  Future<bool?> logEvent(String eventName, Map eventValues) async {
+    bool? result;
     try {
       result = await appsflyerSdk.logEvent(eventName, eventValues);
     } on Exception catch (exception) {
