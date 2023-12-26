@@ -173,21 +173,7 @@ class _FirstTutorialState extends State<FirstTutorial> {
       logEvent('onbording2', userId);
       logEvent('onbording3', userId);
 
-      OneSignal.shared.sendTag("onbording1", "onbording1").then((response) {
-        print("Successfully sent tags with response: $response");
-      }).catchError((error) {
-        print("Encountered an error sending tags: $error");
-      });
-      OneSignal.shared.sendTag("onbording2", "onbording2").then((response) {
-        print("Successfully sent tags with response: $response");
-      }).catchError((error) {
-        print("Encountered an error sending tags: $error");
-      });
-      OneSignal.shared.sendTag("onbording3", "onbording3").then((response) {
-        print("Successfully sent tags with response: $response");
-      }).catchError((error) {
-        print("Encountered an error sending tags: $error");
-      });
+    
     }
 
     return WillPopScope(
@@ -229,27 +215,11 @@ class _FirstTutorialState extends State<FirstTutorial> {
                             if (_currentPage == 1) {
                               Map userId = {'open': 'open'};
                               logEvent('onbording2', userId);
-                              OneSignal.shared
-                                  .sendTag("onbording2", "onbording2")
-                                  .then((response) {
-                                print(
-                                    "Successfully sent tags with response: $response");
-                              }).catchError((error) {
-                                print(
-                                    "Encountered an error sending tags: $error");
-                              });
+                            
                             } else if (_currentPage == 2) {
                               Map userId = {'open': 'open'};
                               logEvent('onbording3', userId);
-                              OneSignal.shared
-                                  .sendTag("onbording3", "onbording3")
-                                  .then((response) {
-                                print(
-                                    "Successfully sent tags with response: $response");
-                              }).catchError((error) {
-                                print(
-                                    "Encountered an error sending tags: $error");
-                              });
+                         
                             }
                           } else {
                             Navigator.pushNamed(context, '/home');
