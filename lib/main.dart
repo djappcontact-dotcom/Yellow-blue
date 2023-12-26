@@ -1,12 +1,17 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/webview.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +39,76 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  AppsflyerSdk appsflyerSdk = AppsflyerSdk({
+    "afDevKey":
+        Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
+    "afAppId": '1570037577',
+    "isDebug": true
+  });
+  @override
+  Future<void> initState() async {
+    super.initState();
+  }
+
+  init() async {
+    await afInit();
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
+    await OneSignal.shared.setLaunchURLsInApp(true);
+
+    OneSignal.shared.setNotificationOpenedHandler((res) async {
+      await afInit();
+      appsflyerSdk.sendPushNotificationData(res.notification.additionalData);
+      await OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+      await OneSignal.shared.setAppId('51c9806a-db8c-4dbf-b544-26f6cc9b8fd0');
+      await OneSignal.shared.setLaunchURLsInApp(true);
+    });
+  }
+
+  afInit() async {
+    try {
+      appsflyerSdk.addPushNotificationDeepLinkPath(['af_deeplink']);
+      appsflyerSdk.onDeepLinking((DeepLinkResult dp) {
+        switch (dp.status) {
+          case Status.FOUND:
+            obNavSkip = true;
+            print(dp.deepLink?.toString());
+            print("deep link value: ${dp.deepLink?.deepLinkValue}");
+            if (dp.deepLink?.deepLinkValue == 'open_it') {
+              Future.delayed(const Duration(milliseconds: 500), () {
+                Get.off(() => HomePage(
+                      fromDpLnk: true,
+                    ));
+              });
+            }
+            break;
+          case Status.NOT_FOUND:
+            print("deep link not found");
+            break;
+          case Status.ERROR:
+            print("deep link error: ${dp.error}");
+            break;
+          case Status.PARSE_ERROR:
+            print("deep link status parsing error");
+            break;
+        }
+      });
+
+      await appsflyerSdk.initSdk(
+          registerConversionDataCallback: true,
+          registerOnAppOpenAttributionCallback: true,
+          registerOnDeepLinkingCallback: true);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ///Preload background images to avoid load images on screens

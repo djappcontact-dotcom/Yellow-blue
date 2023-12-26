@@ -10,6 +10,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:provider/provider.dart';
 
+bool obNavSkip = false;
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => new _SplashScreenState();
@@ -39,30 +41,26 @@ class _SplashScreenState extends State<SplashScreen> {
     final _appState = Provider.of<AppState>(context, listen: false);
 
 
-      OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    _appState.setOSID("70621a8c-7e46-46b9-88fd-1411a45982a3");
 
-      OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
+    OneSignal.shared.setNotificationOpenedHandler((notification) {
+      _appState.setDarkMode(true);
+      Map userId = {'CUID': _appState.cuid};
+      logEvent('GetLoan', userId);
+      Navigator.pushReplacementNamed(context, '/home');
+      Timer(Duration(milliseconds: 10),
+          () async => await Navigator.pushReplacementNamed(context, '/web'));
+    });
 
-      _appState.setOSID("70621a8c-7e46-46b9-88fd-1411a45982a3");
-
-      OneSignal.shared.setNotificationOpenedHandler((notification) {
-        _appState.setDarkMode(true);
-        Map userId = {'CUID': _appState.cuid};
-        logEvent('GetLoan', userId);
-        Navigator.pushReplacementNamed(context, '/home');
-        Timer(Duration(milliseconds: 10),
-            () async => await Navigator.pushReplacementNamed(context, '/web'));
-      });
-
-      Timer(Duration(seconds: 3), () {
-        if (mounted) {
-          if (_appState.darkMode == false) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return FirstTutorial();
-            }));
-          }
+    Timer(Duration(seconds: 3), () {
+      if (mounted && !obNavSkip) {
+        if (_appState.darkMode == false) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return FirstTutorial();
+          }));
         }
-      });
+      }
+    });
   }
 
   Future<bool?> logEvent(String eventName, Map eventValues) async {

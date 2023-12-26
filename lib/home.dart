@@ -21,8 +21,8 @@ import 'calculat.dart';
 int counter = 0;
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+  const HomePage({Key? key,  this.fromDpLnk=false}) : super(key: key);
+  final bool fromDpLnk;
   @override
   State<HomePage> createState() => _HomePageState();
 }
