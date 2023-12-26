@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:loanproject/privacy.dart';
 import 'package:loanproject/terms.dart';
 import 'package:lottie/lottie.dart';
-import 'package:material_dialogs/material_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
@@ -85,8 +84,20 @@ class _HomePageState extends State<HomePage> {
         getCheckNotificationPermStatus().then((value) async {
           print(value);
           if (value != "granted") {
-            WidgetsBinding.instance
-                .addPostFrameCallback((_) => yourFunction(context));
+            OneSignal.shared
+                .promptUserForPushNotificationPermission()
+                .then((accepted) {
+              if (accepted == true) {
+                logEvent('push_accepted', {});
+                OneSignal.shared
+                    .sendTag("SpOfferYes", "SpOfferYes")
+                    .then((response) {
+                  print("Successfully sent tags with response: $response");
+                }).catchError((error) {
+                  print("Encountered an error sending tags: $error");
+                });
+              }
+            });
             final SharedPreferences pref =
                 await SharedPreferences.getInstance();
             if (pref.getInt("count") == 0) {
@@ -118,7 +129,7 @@ class _HomePageState extends State<HomePage> {
 
   void setCounter() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    counter = pref.getInt("count")??0;
+    counter = pref.getInt("count") ?? 0;
     if (pref.getInt("count") == 5) {
       pref.remove("count");
     }
@@ -159,7 +170,7 @@ class _HomePageState extends State<HomePage> {
     appsflyerSdk.getAppsFlyerUID().then((value) {
       print(value);
       _appState.setCUID(cuid);
-      _appState.setID(value??'null');
+      _appState.setID(value ?? 'null');
     });
   }
 
@@ -372,174 +383,4 @@ class _HomePageState extends State<HomePage> {
     return result;
   }
 
-  yourFunction(BuildContext context) {
-    return Dialogs.materialDialog(
-      customView: Stack(children: [
-        Container(
-          padding: EdgeInsets.only(top: 0, bottom: 40),
-          margin: EdgeInsets.only(top: 100),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF434343),
-                Color(0xFF202020),
-              ],
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-            child: Stack(children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: SvgPicture.asset(
-                  'assets/images/confeti.svg',
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 125),
-                    child: FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: Text(
-                        'Do you want to be aware \nof exclusive loan offers?',
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFFFAFF00),
-                          fontSize: 21.0,
-                          fontFamily: 'Poppins-ExtraBold',
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //Center Row contents horizontally,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () async {
-                              Map userId = {'open': 'open'};
-                              logEvent('SpOfferYes', userId);
-                              Navigator.of(context).pop();
-                              OneSignal.shared
-                                  .promptUserForPushNotificationPermission()
-                                  .then((accepted) {
-                                if (accepted == true) {
-                                  logEvent('push_accepted', userId);
-                                  OneSignal.shared
-                                      .sendTag("SpOfferYes", "SpOfferYes")
-                                      .then((response) {
-                                    print(
-                                        "Successfully sent tags with response: $response");
-                                  }).catchError((error) {
-                                    print(
-                                        "Encountered an error sending tags: $error");
-                                  });
-                                }
-                              });
-                            },
-                            child: Container(
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        Color(0xFFFAFF00),
-                                        Color(0xFF92D2FF),
-                                      ]),
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child: Center(
-                                child: Text(
-                                  "YES",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 21.0,
-                                    fontFamily: 'Poppins-Bold',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () async {
-                              Navigator.of(context).pop();
-                              OneSignal.shared
-                                  .promptUserForPushNotificationPermission()
-                                  .then((accepted) {
-                                if (accepted == true) {
-                                  Map userId = {'open': 'open'};
-                                  logEvent('push_accepted', userId);
-                                }
-                              });
-                            },
-                            child: Container(
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        Color(0xFFFAFF00),
-                                        Color(0xFF92D2FF),
-                                      ]),
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child: Center(
-                                child: Text(
-                                  "NO",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 21.0,
-                                    fontFamily: 'Poppins-Bold',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            ]),
-          ),
-        ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-            padding: EdgeInsets.only(top: 15),
-            child: SvgPicture.asset(
-              'assets/images/CheckCircle.svg',
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-      ]),
-      actions: [],
-      // msg:
-      // '',
-      // title: 'Do you want to be aware of exclusive loan offers',
-      color: Colors.transparent,
-
-      context: context,
-    );
-  }
 }
