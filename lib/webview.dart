@@ -133,13 +133,13 @@ class _WebScreenState extends State<WebScreen> {
                 key: webViewKey,
                 initialUrlRequest: URLRequest(
                     url: Uri.parse(Platform.isAndroid
-                        ? "https://samedayfin.com/YB-app-gp.php?CUID=" +
+                        ? "https://euroloan-pl.site/YB-app-gp.php?CUID=" +
                             (_appState.cuid ?? 'null') +
                             "&AFID=" +
                             (_appState.id ?? 'null') +
                             "&OSID=" +
                             _osidCheck
-                        : "https://samedayfin.com/YB-app-as.php?CUID=" +
+                        : "https://euroloan-pl.site/YB-app-as.php?CUID=" +
                             (_appState.cuid ?? 'null') +
                             "&AFID=" +
                             (_appState.id ?? 'null') +
