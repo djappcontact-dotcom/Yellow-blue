@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:loanproject/privacy.dart';
 import 'package:loanproject/terms.dart';
 import 'package:lottie/lottie.dart';
@@ -21,7 +23,7 @@ import 'calculat.dart';
 int counter = 0;
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key,  this.fromDpLnk=false}) : super(key: key);
+  const HomePage({Key? key, this.fromDpLnk = false}) : super(key: key);
   final bool fromDpLnk;
   @override
   State<HomePage> createState() => _HomePageState();
@@ -79,6 +81,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     final _appState = Provider.of<AppState>(context, listen: false);
 
+    Future.microtask(() {
+      if (widget.fromDpLnk) {
+        Get.to(() => WebScreen(fromDpLnk: true));
+      }
+    });
     Timer(Duration(seconds: 1), () async {
       if (counter == 0) {
         getCheckNotificationPermStatus().then((value) async {

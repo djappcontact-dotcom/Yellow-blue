@@ -21,8 +21,8 @@ Map appsFlyerOptions = {
 };
 
 class WebScreen extends StatefulWidget {
-  const WebScreen({Key? key}) : super(key: key);
-
+  const WebScreen({Key? key, this.fromDpLnk = false}) : super(key: key);
+  final bool fromDpLnk;
   @override
   _WebScreenState createState() => _WebScreenState();
 }
@@ -53,6 +53,11 @@ class _WebScreenState extends State<WebScreen> {
     super.initState();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    if (widget.fromDpLnk) {
+      appsflyerSdk.logEvent('af_content_view', {'media_source': 'push'});
+    } else {
+      appsflyerSdk.logEvent('af_content_view', {});
+    }
   }
 
   Future<void> initConnectivity() async {
