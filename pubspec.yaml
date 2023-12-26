@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -27,42 +27,35 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  appsflyer_sdk: ^6.12.2
+  connectivity_plus: ^5.0.2
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_inappwebview: ^6.0.0
   flutter_picker: ^2.0.5
-  appsflyer_sdk: ^6.2.3+2
-  connectivity_plus: ^3.0.4
-  #  webview_flutter: ^3.0.4
-  flutter_inappwebview: ^5.7.2+3
   flutter_svg: ^2.0.5
   fluttertoast: ^8.0.9
   get: ^4.6.5
-  in_app_review: ^2.0.6
+  in_app_review: ^2.0.8
   intl: ^0.18.1
   lottie: ^2.3.2
   material_dialogs: ^1.1.1
-  # nm: ^0.5.0
   notification_permissions: ^0.6.1
   onesignal_flutter: ^3.5.1
   overlay_support: ^2.0.1
-  #  onesignal_flutter: ^2.6.4
   provider: ^6.0.5
-  # rxdart: ^0.25.0
   shared_preferences: ^2.0.7
   xml: ^6.2.2
 
 dev_dependencies:
-
   flutter_test:
     sdk: flutter
-  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

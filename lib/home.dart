@@ -89,7 +89,6 @@ class _HomePageState extends State<HomePage> {
                 .then((accepted) {
               if (accepted == true) {
                 logEvent('push_accepted', {});
-                
               }
             });
             final SharedPreferences pref =
@@ -276,19 +275,16 @@ class _HomePageState extends State<HomePage> {
                           ]),
                       InkWell(
                         onTap: () async {
-                          Map userId = {'CUID': _appState.cuid};
-                          logEvent('GetLoan', userId);
-                        
+                          logEvent('GetLoan', {});
+
                           _appState
                               .setOSID("70621a8c-7e46-46b9-88fd-1411a45982a3");
 
-                          Timer(Duration(seconds: 1), () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WebScreen()),
-                            );
-                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WebScreen()),
+                          );
                         },
                         child: Container(
                           padding: EdgeInsets.only(
@@ -369,5 +365,4 @@ class _HomePageState extends State<HomePage> {
     }
     return result;
   }
-
 }

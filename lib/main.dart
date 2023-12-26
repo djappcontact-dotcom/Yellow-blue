@@ -9,7 +9,6 @@ import 'package:loanproject/state.dart';
 import 'package:loanproject/webview.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'splash.dart';
@@ -17,27 +16,7 @@ import 'splash.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  if (Platform.isAndroid) {
-    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
 
-    var swAvailable = await AndroidWebViewFeature.isFeatureSupported(
-        AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
-    var swInterceptAvailable = await AndroidWebViewFeature.isFeatureSupported(
-        AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
-
-    if (swAvailable && swInterceptAvailable) {
-      AndroidServiceWorkerController serviceWorkerController =
-          AndroidServiceWorkerController.instance();
-
-      await serviceWorkerController
-          .setServiceWorkerClient(AndroidServiceWorkerClient(
-        shouldInterceptRequest: (request) async {
-          print(request);
-          return null;
-        },
-      ));
-    }
-  }
   final state = AppState();
 
   if (pref.getInt("count") == null) {
