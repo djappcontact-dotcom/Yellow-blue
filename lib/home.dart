@@ -162,10 +162,6 @@ class _HomePageState extends State<HomePage> {
   void initApsSdk() async {
     final _appState = Provider.of<AppState>(context, listen: false);
     cuid = getRandomString(15);
-    appsflyerSdk.initSdk(
-        registerConversionDataCallback: true,
-        registerOnAppOpenAttributionCallback: true,
-        registerOnDeepLinkingCallback: true);
     appsflyerSdk.setCustomerUserId(cuid);
     appsflyerSdk.getAppsFlyerUID().then((value) {
       print(value);

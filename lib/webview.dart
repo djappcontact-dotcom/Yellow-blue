@@ -45,10 +45,7 @@ class _WebScreenState extends State<WebScreen> {
   void initState() {
     initConnectivity();
     cuid = getRandomString(15);
-    appsflyerSdk.initSdk(
-        registerConversionDataCallback: true,
-        registerOnAppOpenAttributionCallback: true,
-        registerOnDeepLinkingCallback: true);
+   
     appsflyerSdk.setCustomerUserId(cuid);
     super.initState();
     _connectivitySubscription =

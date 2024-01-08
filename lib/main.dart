@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp> {
     "afAppId": '1570037577',
     "isDebug": true
   });
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
   initialize() async {
     await afInit();
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
+    await OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
     await OneSignal.shared.setLaunchURLsInApp(true);
 
     OneSignal.shared.setNotificationOpenedHandler((res) async {
@@ -74,28 +75,12 @@ class _MyAppState extends State<MyApp> {
     try {
       appsflyerSdk.addPushNotificationDeepLinkPath(['af_deeplink']);
       appsflyerSdk.onDeepLinking((DeepLinkResult dp) {
-        switch (dp.status) {
-          case Status.FOUND:
-            obNavSkip = true;
-            print(dp.deepLink?.toString());
-            print("deep link value: ${dp.deepLink?.deepLinkValue}");
-            if (dp.deepLink?.deepLinkValue == 'open_it') {
-              Future.delayed(const Duration(milliseconds: 500), () {
-                Get.off(() => HomePage(
-                      fromDpLnk: true,
-                    ));
-              });
-            }
-            break;
-          case Status.NOT_FOUND:
-            print("deep link not found");
-            break;
-          case Status.ERROR:
-            print("deep link error: ${dp.error}");
-            break;
-          case Status.PARSE_ERROR:
-            print("deep link status parsing error");
-            break;
+        if (dp.deepLink?.deepLinkValue == 'open_it') {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            Get.off(() => HomePage(
+                  fromDpLnk: true,
+                ));
+          });
         }
       });
 

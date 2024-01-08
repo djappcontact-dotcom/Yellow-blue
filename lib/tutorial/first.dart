@@ -94,12 +94,6 @@ class _FirstTutorialState extends State<FirstTutorial> {
     });
   }
 
-  void initApsSdk() {
-    appsflyerSdk.initSdk(
-        registerConversionDataCallback: true,
-        registerOnAppOpenAttributionCallback: true,
-        registerOnDeepLinkingCallback: true);
-  }
 
   Future<bool?> logEvent(String eventName, Map eventValues) async {
     bool? result;
