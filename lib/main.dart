@@ -22,8 +22,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences pref = await SharedPreferences.getInstance();
 
-  final state = AppState();
-
   if (pref.getInt("count") == null) {
     pref.setInt("count", 0);
   } else {
@@ -34,7 +32,7 @@ Future<void> main() async {
 
   runApp(
     MultiProvider(
-        providers: [ChangeNotifierProvider<AppState>.value(value: state)],
+        providers: [ChangeNotifierProvider(create: (c) => AppState())],
         child: MyApp()),
   );
 }
@@ -52,11 +50,12 @@ class _MyAppState extends State<MyApp> {
     "isDebug": true
   });
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
+    initialize();
   }
 
-  init() async {
+  initialize() async {
     await afInit();
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
     OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");

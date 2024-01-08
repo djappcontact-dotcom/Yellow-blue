@@ -40,8 +40,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     final _appState = Provider.of<AppState>(context, listen: false);
 
-
-    _appState.setOSID("70621a8c-7e46-46b9-88fd-1411a45982a3");
+    OneSignal.shared.getDeviceState().then((value) {
+      _appState.setOSID(value?.userId ?? 'null');
+    });
 
     OneSignal.shared.setNotificationOpenedHandler((notification) {
       _appState.setDarkMode(true);

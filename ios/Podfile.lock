@@ -1,19 +1,19 @@
 PODS:
   - appsflyer_sdk (6.8.0):
-    - AppsFlyerFramework (= 6.9.1)
+    - AppsFlyerFramework (= 6.12.2)
     - Flutter
-  - AppsFlyerFramework (6.9.1):
-    - AppsFlyerFramework/Main (= 6.9.1)
-  - AppsFlyerFramework/Main (6.9.1)
+  - AppsFlyerFramework (6.12.2):
+    - AppsFlyerFramework/Main (= 6.12.2)
+  - AppsFlyerFramework/Main (6.12.2)
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
   - Flutter (1.0.0)
-  - flutter_inappwebview (0.0.1):
+  - flutter_inappwebview_ios (0.0.1):
     - Flutter
-    - flutter_inappwebview/Core (= 0.0.1)
+    - flutter_inappwebview_ios/Core (= 0.0.1)
     - OrderedSet (~> 5.0)
-  - flutter_inappwebview/Core (0.0.1):
+  - flutter_inappwebview_ios/Core (0.0.1):
     - Flutter
     - OrderedSet (~> 5.0)
   - fluttertoast (0.0.2):
@@ -49,12 +49,13 @@ DEPENDENCIES:
   - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Flutter (from `Flutter`)
-  - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
+  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
   - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - OneSignalXCFramework (< 4.0, >= 3.4.3)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -72,8 +73,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity_plus/ios"
   Flutter:
     :path: Flutter
-  flutter_inappwebview:
-    :path: ".symlinks/plugins/flutter_inappwebview/ios"
+  flutter_inappwebview_ios:
+    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   in_app_review:
@@ -83,17 +84,17 @@ EXTERNAL SOURCES:
   onesignal_flutter:
     :path: ".symlinks/plugins/onesignal_flutter/ios"
   shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  appsflyer_sdk: f420e5007d635511073ed8c63b2c6fcedefb4cba
-  AppsFlyerFramework: dc9aa675faa8e1a2ed40fb295d3c5408ee2b972a
-  connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
+  appsflyer_sdk: beae2edc91c51ca92cad637534b45b22ff35d287
+  AppsFlyerFramework: 6eb4d89d2eb9a6632317f1055b359d9fd85fd5ff
+  connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
-  fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
+  flutter_inappwebview_ios: 97215cf7d4677db55df76782dbd2930c5e1c1ea0
+  fluttertoast: 48c57db1b71b0ce9e6bba9f31c940ff4b001293c
   in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
   notification_permissions: 825ea1bf2a52ab585c53fd7b5e8e96876d735d4b
   onesignal_flutter: b8ac01bc3ebe47e798d7d775455c3a9b5b84f1c5
@@ -104,6 +105,6 @@ SPEC CHECKSUMS:
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
-PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+PODFILE CHECKSUM: c841080691cd12bd81c76afcceeaede1fda9e7fa
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.2
