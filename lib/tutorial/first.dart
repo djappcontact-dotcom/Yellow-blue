@@ -77,7 +77,6 @@ class _FirstTutorialState extends State<FirstTutorial> {
     });
   }
 
-
   Future<bool?> logEvent(String eventName, Map eventValues) async {
     bool? result;
     try {
@@ -149,8 +148,6 @@ class _FirstTutorialState extends State<FirstTutorial> {
       logEvent('onbording1', userId);
       logEvent('onbording2', userId);
       logEvent('onbording3', userId);
-
-    
     }
 
     return WillPopScope(
@@ -184,19 +181,16 @@ class _FirstTutorialState extends State<FirstTutorial> {
                     child: InkWell(
                         onTap: () async {
                           if (_pageController.page?.toInt() != 3) {
-                            _pageController.animateToPage(
-                                _pageController.page?.toInt() ?? 0 + 1,
+                            _pageController.animateToPage(_currentPage + 1,
                                 duration: Duration(milliseconds: 200),
                                 curve: Curves.easeOut);
 
                             if (_currentPage == 1) {
                               Map userId = {'open': 'open'};
                               logEvent('onbording2', userId);
-                            
                             } else if (_currentPage == 2) {
                               Map userId = {'open': 'open'};
                               logEvent('onbording3', userId);
-                         
                             }
                           } else {
                             Navigator.pushNamed(context, '/home');
