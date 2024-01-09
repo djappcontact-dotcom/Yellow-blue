@@ -79,7 +79,6 @@ class _HomePageState extends State<HomePage> {
     initApsSdk();
     setCounter();
     super.initState();
-    final _appState = Provider.of<AppState>(context, listen: false);
 
     Future.microtask(() {
       if (widget.fromDpLnk) {
@@ -103,14 +102,7 @@ class _HomePageState extends State<HomePage> {
             if (pref.getInt("count") == 0) {
               pref.setInt("count", 1);
             }
-          } else {
-            OneSignal.shared.setNotificationOpenedHandler((notification) {
-              Map userId = {'CUID': _appState.cuid};
-              logEvent('GetLoan', userId);
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => WebScreen()));
-            });
-          }
+          } 
         });
       }
       if (counter == 3) {
@@ -118,12 +110,6 @@ class _HomePageState extends State<HomePage> {
           _inAppReview.requestReview();
         }
       }
-    });
-    OneSignal.shared.setNotificationOpenedHandler((notification) {
-      Map userId = {'CUID': _appState.cuid};
-      logEvent('GetLoan', userId);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => WebScreen()));
     });
   }
 
@@ -278,8 +264,6 @@ class _HomePageState extends State<HomePage> {
                           ]),
                       InkWell(
                         onTap: () async {
-                          logEvent('GetLoan', {});
-
                           await OneSignal.shared.getDeviceState().then((value) {
                             _appState.setOSID(value?.userId ?? 'null');
                           });

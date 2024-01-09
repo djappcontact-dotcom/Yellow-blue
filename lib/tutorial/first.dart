@@ -7,9 +7,6 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import '../models/slide.dart';
 import '../models/slide_item.dart';
 import '../size_config.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:provider/provider.dart';
-import '../state.dart';
 
 class FirstTutorial extends StatefulWidget {
   const FirstTutorial({Key? key}) : super(key: key);
@@ -53,20 +50,6 @@ class _FirstTutorialState extends State<FirstTutorial> {
     precacheImage(AssetImage('assets/images/back_three.png'), context);
     precacheImage(AssetImage('assets/images/back_sec.png'), context);
     precacheImage(AssetImage('assets/images/img_backon1.png'), context);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    OneSignal.shared.setNotificationOpenedHandler((notification) {
-      final _appState = Provider.of<AppState>(context, listen: false);
-      Map userId = {'CUID': _appState.cuid};
-      logEvent('GetLoan', userId);
-      Navigator.pushReplacementNamed(context, '/home');
-      Timer(Duration(microseconds: 10),
-          () async => await Navigator.pushReplacementNamed(context, '/web'));
-    });
   }
 
   @override

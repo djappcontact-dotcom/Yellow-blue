@@ -7,9 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:loanproject/state.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:provider/provider.dart';
 
 Map appsFlyerOptions = {
   "afDevKey":
@@ -50,14 +47,6 @@ class _CalculatState extends State<Calculat> {
     Map userId = {'open': 'open'};
     logEvent('calculator', userId);
 
-    OneSignal.shared.setNotificationOpenedHandler((notification) {
-      final _appState = Provider.of<AppState>(context, listen: false);
-      Map userId = {'CUID': _appState.cuid};
-      logEvent('GetLoan', userId);
-      Navigator.pushReplacementNamed(context, '/home');
-      Timer(Duration(milliseconds: 100),
-              () async => await Navigator.pushReplacementNamed(context, '/web'));
-    });
   }
 
   String _getPickerValues() {

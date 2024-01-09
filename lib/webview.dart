@@ -144,25 +144,19 @@ class _WebScreenState extends State<WebScreen> {
           );
         } else {
           double height = MediaQuery.of(context).size.height;
-          double width = MediaQuery.of(context).size.width;
-          double top = 40;
           double sizeImage = 1;
           double sizeTextMain = 4.2;
 
           if (height <= 670) {
             ///SE 2
-            top = 40;
             sizeImage = 0.8;
             sizeTextMain = 3.5;
           } else if (height <= 900 && height >= 895) {
             ///XS Max & XR & 11 & 11 Pro Max
-            top = 80;
           } else if (height <= 1000 && height >= 900) {
             ///12 pro max
-            top = 130;
           } else if (height <= 739 && height >= 710) {
             /// 7 Plus
-            top = 50;
             sizeImage = 0.9;
             sizeTextMain = 3.7;
           }
