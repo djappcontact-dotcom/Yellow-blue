@@ -92,7 +92,7 @@ SPEC CHECKSUMS:
   appsflyer_sdk: beae2edc91c51ca92cad637534b45b22ff35d287
   AppsFlyerFramework: 6eb4d89d2eb9a6632317f1055b359d9fd85fd5ff
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_inappwebview_ios: 97215cf7d4677db55df76782dbd2930c5e1c1ea0
   fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
   in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
@@ -107,4 +107,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c841080691cd12bd81c76afcceeaede1fda9e7fa
 
-COCOAPODS: 1.14.2
+COCOAPODS: 1.15.2

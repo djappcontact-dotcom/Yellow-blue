@@ -15,7 +15,6 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:notification_permissions/notification_permissions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'calculat.dart';
@@ -122,27 +121,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Checks the notification permission status
-  Future<String?> getCheckNotificationPermStatus() {
-    var permGranted = "granted";
-    var permDenied = "denied";
-    var permUnknown = "unknown";
-    var permProvisional = "provisional";
+  // Future<String?> getCheckNotificationPermStatus() {
+  //   var permGranted = "granted";
+  //   var permDenied = "denied";
+  //   var permUnknown = "unknown";
+  //   var permProvisional = "provisional";
 
-    return NotificationPermissions.getNotificationPermissionStatus()
-        .then((status) {
-      switch (status) {
-        case PermissionStatus.denied:
-          return permDenied;
-        case PermissionStatus.granted:
-          return permGranted;
-        case PermissionStatus.unknown:
-          return permUnknown;
-        case PermissionStatus.provisional:
-          return permProvisional;
-        default:
-          return null;
-      }
-    });
+    // return NotificationPermissions.getNotificationPermissionStatus()
+    //     .then((status) {
+    //   switch (status) {
+    //     case PermissionStatus.denied:
+    //       return permDenied;
+    //     case PermissionStatus.granted:
+    //       return permGranted;
+    //     case PermissionStatus.unknown:
+    //       return permUnknown;
+    //     case PermissionStatus.provisional:
+    //       return permProvisional;
+    //     default:`
+    //       return null;
+    //   }
+    // });
   }
 
   void initApsSdk() async {

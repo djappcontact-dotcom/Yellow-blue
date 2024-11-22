@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   appsflyer_sdk: ^6.12.2
-  connectivity_plus: ^5.0.2
+  connectivity_plus: ^6.1.0
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
@@ -38,11 +38,11 @@ dependencies:
   fluttertoast: ^8.2.4
   get: ^4.6.5
   in_app_review: ^2.0.8
-  intl: ^0.18.1
-  lottie: ^2.3.2
+  intl: ^0.19.0
+  lottie: ^3.1.3
   material_dialogs: ^1.1.1
-  notification_permissions: ^0.6.1
-  onesignal_flutter: ^3.5.1
+  # notification_permissions: ^0.6.1
+  onesignal_flutter: ^5.2.6
   overlay_support: ^2.0.1
   provider: ^6.0.5
   shared_preferences: ^2.0.7

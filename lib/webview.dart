@@ -57,6 +57,11 @@ class _WebScreenState extends State<WebScreen> {
     }
   }
 
+//   Future<String?> getAppInstanceId() async {
+//   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+//   return await analytics.appInstanceId;
+// }
+
   Future<void> initConnectivity() async {
     ConnectivityResult result = ConnectivityResult.none;
     try {

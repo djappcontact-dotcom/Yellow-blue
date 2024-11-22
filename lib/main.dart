@@ -10,7 +10,6 @@ import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/webview.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
@@ -52,23 +51,23 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initialize();
+    // initialize();
   }
 
-  initialize() async {
-    await afInit();
-    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-    await OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
-    await OneSignal.shared.setLaunchURLsInApp(true);
+  // initialize() async {
+  //   await afInit();
+  //   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  //   await OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
+  //   await OneSignal.shared.setLaunchURLsInApp(true);
 
-    OneSignal.shared.setNotificationOpenedHandler((res) async {
-      await afInit();
-      appsflyerSdk.sendPushNotificationData(res.notification.additionalData);
-      await OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-      await OneSignal.shared.setAppId('51c9806a-db8c-4dbf-b544-26f6cc9b8fd0');
-      await OneSignal.shared.setLaunchURLsInApp(true);
-    });
-  }
+  //   OneSignal.shared.setNotificationOpenedHandler((res) async {
+  //     await afInit();
+  //     appsflyerSdk.sendPushNotificationData(res.notification.additionalData);
+  //     await OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  //     await OneSignal.shared.setAppId('51c9806a-db8c-4dbf-b544-26f6cc9b8fd0');
+  //     await OneSignal.shared.setLaunchURLsInApp(true);
+  //   });
+  // }
 
   afInit() async {
     try {
