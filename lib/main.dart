@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 
+// import 'firebase_options.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/get_core.dart';
@@ -11,10 +13,12 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
+import 'package:loanproject/tutorial/first.dart';
 import 'package:loanproject/webview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'var.dart' as variables;
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'splash.dart';
@@ -43,7 +47,26 @@ Future<void> main() async {
   await firebaseInititalization();
 
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
   log(await analytics.appInstanceId ?? "appInstanceId : none");
+
+  try {
+    await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 60),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+    );
+    await remoteConfig.fetchAndActivate();
+
+    variables.needShowReview = await remoteConfig.getInt('needShowReview');
+    log('\n -----------------\n needShowReview from remote config${await remoteConfig.getInt('needShowReview')}\n -----------------\n');
+  } on PlatformException catch (exception) {
+    // Fetch exception.
+    log(exception.toString());
+  } catch (exception) {
+    log(exception.toString());
+  }
 
   runApp(
     MultiProvider(
@@ -53,7 +76,9 @@ Future<void> main() async {
 }
 
 firebaseInititalization() async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    // options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 osInitialize() async {
@@ -128,6 +153,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           '/web': (context) => WebScreen(),
           '/home': (context) => HomePage(),
+          '/first': (context) => FirstTutorial(),
         },
         debugShowCheckedModeBanner: false,
         home: LayoutBuilder(builder: (context, constraints) {

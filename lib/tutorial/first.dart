@@ -149,8 +149,8 @@ class _FirstTutorialState extends State<FirstTutorial> {
       logEvent('onbording3', userId);
     }
 
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: Container(
           height: double.infinity,

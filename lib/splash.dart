@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loanproject/loading_screen.dart';
 import 'package:loanproject/main.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/tutorial/first.dart';
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (mounted && !obNavSkip) {
         if (_appState.darkMode == false) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return FirstTutorial();
+            return LoadingScreen();
           }));
         }
       }
