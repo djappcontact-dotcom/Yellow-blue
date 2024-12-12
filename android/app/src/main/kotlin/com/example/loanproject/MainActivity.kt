@@ -1,4 +1,4 @@
-package com.example.loanproject
+package com.quick.loans.online.instant.money
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -31,7 +31,7 @@ class _WebScreenState extends State<WebScreen> {
   AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
   Random _rnd = Random();
@@ -43,13 +43,17 @@ class _WebScreenState extends State<WebScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     initConnectivity();
     cuid = getRandomString(15);
-   
+
     appsflyerSdk.setCustomerUserId(cuid);
-    super.initState();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
+    // _connectivitySubscription =
+    //     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
+    _checkInitialConnectivity();
     if (widget.fromDpLnk) {
       appsflyerSdk.logEvent('af_content_view', {'media_source': 'push'});
     } else {
@@ -63,21 +67,20 @@ class _WebScreenState extends State<WebScreen> {
 // }
 
   Future<void> initConnectivity() async {
-    ConnectivityResult result = ConnectivityResult.none;
-    try {
-      result = await _connectivity.checkConnectivity();
-      print(result);
-    } on PlatformException catch (exception) {
-      print(exception.toString());
-    }
-    if (!mounted) {
-      return Future.value(null);
-    }
+    _connectivitySubscription = _connectivity.onConnectivityChanged
+        .listen((List<ConnectivityResult> result) {
+      // Got a new connectivity status!
+      _updateConnectionStatus(result.last);
+    });
+  }
 
-    return _updateConnectionStatus(result);
+  Future<void> _checkInitialConnectivity() async {
+    List<ConnectivityResult> result = await _connectivity.checkConnectivity();
+    _updateConnectionStatus(result.last);
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (!mounted) return;
     setState(() {
       _connectionStatus = result;
     });
@@ -85,7 +88,7 @@ class _WebScreenState extends State<WebScreen> {
 
   @override
   void dispose() {
-    _connectivitySubscription?.cancel();
+    _connectivitySubscription.cancel();
     super.dispose();
   }
 
@@ -104,8 +107,8 @@ class _WebScreenState extends State<WebScreen> {
     if (_appState.osid != null) {
       _osidCheck = _appState.osid ?? 'null';
     }
-    return StreamBuilder<ConnectivityResult>(
-      stream: Connectivity().onConnectivityChanged,
+    return StreamBuilder<List<ConnectivityResult>>(
+      stream: _connectivity.onConnectivityChanged,
       builder: (context, _) {
         print(_connectionStatus);
         if (_connectionStatus != ConnectivityResult.none) {
@@ -133,7 +136,9 @@ class _WebScreenState extends State<WebScreen> {
                           "&AFID=" +
                           (_appState.id ?? 'null') +
                           "&OSID=" +
-                          _osidCheck
+                          _osidCheck +
+                          "&FRBID=" +
+                          (_appState.fbuid ?? 'null')
                       : "https://euroloan-pl.site/YB-app-as.php?CUID=" +
                           (_appState.cuid ?? 'null') +
                           "&AFID=" +

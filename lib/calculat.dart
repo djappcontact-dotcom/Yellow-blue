@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_picker/flutter_picker.dart';
+import 'package:flutter_picker_plus/picker.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -46,7 +46,6 @@ class _CalculatState extends State<Calculat> {
     super.initState();
     Map userId = {'open': 'open'};
     logEvent('calculator', userId);
-
   }
 
   String _getPickerValues() {
@@ -123,9 +122,7 @@ class _CalculatState extends State<Calculat> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 16,
-                            top: height * sizeTop,
-                            right: 16),
+                            left: 16, top: height * sizeTop, right: 16),
                         child: Column(children: <Widget>[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -152,8 +149,7 @@ class _CalculatState extends State<Calculat> {
                                   style: TextStyle(
                                     color: Color(0xFF1D1D1D),
                                     fontFamily: "Phonk",
-                                    fontSize:
-                                        24,
+                                    fontSize: 24,
                                   )),
                             ],
                           ),

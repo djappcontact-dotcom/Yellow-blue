@@ -86,23 +86,15 @@ class _HomePageState extends State<HomePage> {
     });
     Timer(Duration(seconds: 1), () async {
       if (counter == 0) {
-        getCheckNotificationPermStatus().then((value) async {
-          print(value);
-          if (value != "granted") {
-            OneSignal.shared
-                .promptUserForPushNotificationPermission()
-                .then((accepted) {
-              if (accepted == true) {
-                logEvent('push_accepted', {});
-              }
-            });
-            final SharedPreferences pref =
-                await SharedPreferences.getInstance();
-            if (pref.getInt("count") == 0) {
-              pref.setInt("count", 1);
-            }
-          } 
+        OneSignal.Notifications.requestPermission(true).then((accepted) {
+          if (accepted == true) {
+            logEvent('push_accepted', {});
+          }
         });
+        final SharedPreferences pref = await SharedPreferences.getInstance();
+        if (pref.getInt("count") == 0) {
+          pref.setInt("count", 1);
+        }
       }
       if (counter == 3) {
         if (_inAppReview.isAvailable() == true) {
@@ -121,28 +113,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Checks the notification permission status
-  // Future<String?> getCheckNotificationPermStatus() {
-  //   var permGranted = "granted";
-  //   var permDenied = "denied";
-  //   var permUnknown = "unknown";
-  //   var permProvisional = "provisional";
+//   Future<String?> getCheckNotificationPermStatus() {
+//     var permGranted = "granted";
+//     var permDenied = "denied";
+//     var permUnknown = "unknown";
+//     var permProvisional = "provisional";
 
-    // return NotificationPermissions.getNotificationPermissionStatus()
-    //     .then((status) {
-    //   switch (status) {
-    //     case PermissionStatus.denied:
-    //       return permDenied;
-    //     case PermissionStatus.granted:
-    //       return permGranted;
-    //     case PermissionStatus.unknown:
-    //       return permUnknown;
-    //     case PermissionStatus.provisional:
-    //       return permProvisional;
-    //     default:`
-    //       return null;
-    //   }
-    // });
-  }
+//   return NotificationPermissions.getNotificationPermissionStatus()
+//       .then((status) {
+//     switch (status) {
+//       case PermissionStatus.denied:
+//         return permDenied;
+//       case PermissionStatus.granted:
+//         return permGranted;
+//       case PermissionStatus.unknown:
+//         return permUnknown;
+//       case PermissionStatus.provisional:
+//         return permProvisional;
+//       default:`
+//         return null;
+//     }
+//   });
+// }
 
   void initApsSdk() async {
     final _appState = Provider.of<AppState>(context, listen: false);
@@ -263,9 +255,8 @@ class _HomePageState extends State<HomePage> {
                           ]),
                       InkWell(
                         onTap: () async {
-                          await OneSignal.shared.getDeviceState().then((value) {
-                            _appState.setOSID(value?.userId ?? 'null');
-                          });
+                          _appState.setOSID(
+                              await OneSignal.User.getOnesignalId() ?? 'null');
                           Navigator.push(
                             context,
                             MaterialPageRoute(

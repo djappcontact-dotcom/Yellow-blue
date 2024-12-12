@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loanproject/main.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/tutorial/first.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:provider/provider.dart';
 
 bool obNavSkip = false;
@@ -20,12 +20,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final int delayedAmount = 500;
 
-  AppsflyerSdk appsflyerSdk = AppsflyerSdk({
-    "afDevKey":
-        Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
-    "afAppId": '1570037577',
-    "isDebug": true
-  });
+  // AppsflyerSdk appsflyerSdk = AppsflyerSdk({
+  //   "afDevKey":
+  //       Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
+  //   "afAppId": '1570037577',
+  //   "isDebug": true
+  // });
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
   Random _rnd = Random();
@@ -39,11 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     final _appState = Provider.of<AppState>(context, listen: false);
-
-    OneSignal.shared.getDeviceState().then((value) {
-      _appState.setOSID(value?.userId ?? 'null');
-    });
-
+    getOSId();
+    getFRBId();
     Timer(Duration(seconds: 3), () {
       if (mounted && !obNavSkip) {
         if (_appState.darkMode == false) {
@@ -53,6 +50,18 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
     });
+  }
+
+  Future<void> getOSId() async {
+    final _appState = Provider.of<AppState>(context, listen: false);
+    _appState.setOSID(await OneSignal.User.getOnesignalId() ?? "null");
+  }
+
+  Future<void> getFRBId() async {
+    final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+    final _appState = Provider.of<AppState>(context, listen: false);
+    _appState.setFBUID(await await analytics.appInstanceId  ?? "null");
   }
 
   Future<bool?> logEvent(String eventName, Map eventValues) async {

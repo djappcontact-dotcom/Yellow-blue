@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/get_core.dart';
@@ -10,11 +12,19 @@ import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/webview.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'splash.dart';
+
+AppsflyerSdk appsflyerSdk = AppsflyerSdk({
+  "afDevKey":
+      Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
+  "afAppId": '1570037577',
+  "isDebug": true
+});
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,11 +38,54 @@ Future<void> main() async {
     pref.setInt("count", _count);
   }
 
+  await afInit();
+  await osInitialize();
+  await firebaseInititalization();
+
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  log(await analytics.appInstanceId ?? "appInstanceId : none");
+
   runApp(
     MultiProvider(
         providers: [ChangeNotifierProvider(create: (c) => AppState())],
         child: MyApp()),
   );
+}
+
+firebaseInititalization() async {
+  await Firebase.initializeApp();
+}
+
+osInitialize() async {
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
+  OneSignal.initialize("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
+
+  OneSignal.Notifications.addClickListener((listener) async {
+    appsflyerSdk.sendPushNotificationData(listener.notification.additionalData);
+  });
+}
+
+afInit() async {
+  try {
+    appsflyerSdk.addPushNotificationDeepLinkPath(['af_deeplink']);
+    appsflyerSdk.onDeepLinking((DeepLinkResult dp) {
+      if (dp.deepLink?.deepLinkValue == 'open_it') {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Get.off(() => HomePage(
+                fromDpLnk: true,
+              ));
+        });
+      }
+    });
+
+    await appsflyerSdk.initSdk(
+        registerConversionDataCallback: true,
+        registerOnAppOpenAttributionCallback: true,
+        registerOnDeepLinkingCallback: true);
+  } catch (e) {
+    log(e.toString());
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -41,54 +94,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AppsflyerSdk appsflyerSdk = AppsflyerSdk({
-    "afDevKey":
-        Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
-    "afAppId": '1570037577',
-    "isDebug": true
-  });
-
   @override
   void initState() {
     super.initState();
-    // initialize();
-  }
-
-  // initialize() async {
-  //   await afInit();
-  //   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  //   await OneSignal.shared.setAppId("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
-  //   await OneSignal.shared.setLaunchURLsInApp(true);
-
-  //   OneSignal.shared.setNotificationOpenedHandler((res) async {
-  //     await afInit();
-  //     appsflyerSdk.sendPushNotificationData(res.notification.additionalData);
-  //     await OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  //     await OneSignal.shared.setAppId('51c9806a-db8c-4dbf-b544-26f6cc9b8fd0');
-  //     await OneSignal.shared.setLaunchURLsInApp(true);
-  //   });
-  // }
-
-  afInit() async {
-    try {
-      appsflyerSdk.addPushNotificationDeepLinkPath(['af_deeplink']);
-      appsflyerSdk.onDeepLinking((DeepLinkResult dp) {
-        if (dp.deepLink?.deepLinkValue == 'open_it') {
-          Future.delayed(const Duration(milliseconds: 500), () {
-            Get.off(() => HomePage(
-                  fromDpLnk: true,
-                ));
-          });
-        }
-      });
-
-      await appsflyerSdk.initSdk(
-          registerConversionDataCallback: true,
-          registerOnAppOpenAttributionCallback: true,
-          registerOnDeepLinkingCallback: true);
-    } catch (e) {
-      log(e.toString());
-    }
   }
 
   @override

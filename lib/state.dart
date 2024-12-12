@@ -30,6 +30,16 @@ class AppState extends ChangeNotifier {
     });
   }
 
+  ///FirebaseID
+  String? _fbuid;
+  String? get fbuid => _fbuid;
+  void setFBUID(String tkn) {
+    _fbuid = tkn;
+    Future.delayed(Duration.zero, () {
+      notifyListeners();
+    });
+  }
+
   ///ID
   String? _id;
   String? get id => _id;
