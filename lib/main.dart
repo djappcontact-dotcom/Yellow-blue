@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:loanproject/firebase_options.dart';
 import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
@@ -32,7 +33,12 @@ AppsflyerSdk appsflyerSdk = AppsflyerSdk({
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   final SharedPreferences pref = await SharedPreferences.getInstance();
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
 
   if (pref.getInt("count") == null) {
     pref.setInt("count", 0);
@@ -44,10 +50,7 @@ Future<void> main() async {
 
   await afInit();
   await osInitialize();
-  await firebaseInititalization();
-
-  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.activate();
   log(await analytics.appInstanceId ?? "appInstanceId : none");
 
   try {
@@ -72,12 +75,6 @@ Future<void> main() async {
     MultiProvider(
         providers: [ChangeNotifierProvider(create: (c) => AppState())],
         child: MyApp()),
-  );
-}
-
-firebaseInititalization() async {
-  await Firebase.initializeApp(
-    // options: DefaultFirebaseOptions.currentPlatform,
   );
 }
 
