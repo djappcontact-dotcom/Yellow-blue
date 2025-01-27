@@ -137,8 +137,10 @@ class _WebScreenState extends State<WebScreen> {
                           (_appState.id ?? 'null') +
                           "&OSID=" +
                           _osidCheck +
-                          "&FRBID=" +
-                          (_appState.fbuid ?? 'null')
+                          "&FID=" +
+                          (_appState.fbuid ?? 'null') +
+                          "&ref=" +
+                          (_appState.ref ?? 'null')
                       : "https://euroloan-pl.site/YB-app-as.php?CUID=" +
                           (_appState.cuid ?? 'null') +
                           "&AFID=" +

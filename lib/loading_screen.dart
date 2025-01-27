@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -13,26 +15,26 @@ import 'var.dart' as variables;
 
 const String title1 = "How to Use the App:";
 const String message1 =
-    "1. Fill out a straightforward form to request your cash.\n\n2. Review and sign the loan agreement to continue.\n\n3. Wait for the cash to be transferred to your account.\n";
+    "1. Fill out the simple form to request your funds.\n\n2. Review and agree to the terms to proceed.\n\n3. Wait for your money to be deposited into your account.		\n\n";
 const String button1 = "Continue";
 
 const String title2 = "Please Rate Us:";
 const String message2 =
-    "We value your feedback and would love to hear from you!\n";
+    "Your opinion matters to us! We’d love to hear what you think about our app.			\n";
 const String button2 = "Submit";
 
 const String title3 = "Thank you for your positive rating!";
 const String message3 =
-    "We’d appreciate it if you could also share your feedback on Google Play to help us improve our service.\n";
+    "We’d love it if you could share your review on Google Play to help us improve.			\n";
 const String button3 = "Rate on the Play Store";
 
-const String title4 = "We’re sorry it wasn’t perfect.";
+const String title4 = "We’re sorry to hear that.";
 const String message4 =
-    "If the app didn’t meet your expectations, please let us know how we can improve your experience.\n";
+    "If the app fell short of your expectations, please share how we can improve.			\n";
 const String button4 = "Submit";
 
-const String title5 = "Your message has been sent";
-const String message5 = "Thank you for the feedback.";
+const String title5 = "We’ve received your message.";
+const String message5 = "Thanks for taking the time to share your feedback.		";
 const String button5 = "Continue";
 
 const TextStyle titleStyle = TextStyle(
@@ -47,8 +49,12 @@ const TextStyle messageStyle = TextStyle(
     letterSpacing: 0,
     height: 1.6,
     color: Colors.black);
-const TextStyle submitButtonStyle =
-    TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white);
+const TextStyle submitButtonStyle = TextStyle(
+  color: Color(0xFFF9FF00),
+  fontSize: 23,
+  fontFamily: 'Poppins',
+  fontWeight: FontWeight.w700,
+);
 
 double nowRating = 0;
 bool needReview = true;
@@ -64,7 +70,14 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   final _inAppReview = InAppReview.instance;
-  Future<void> _requestReview() => _inAppReview.requestReview();
+  Future<void> _requestReview() async {
+    if (await _inAppReview.isAvailable()) {
+      // Open the store review page
+      _inAppReview.openStoreListing();
+    } else {
+      _showRatingDialog();
+    }
+  }
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<int> _counter;
@@ -79,6 +92,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void initialization() async {
     await Future.delayed(const Duration(seconds: 1));
+    if (Platform.isIOS) {
+      _navigateToHome();
+    }
     FlutterNativeSplash.remove();
   }
 
@@ -93,8 +109,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     });
   }
 
-  Future<void> _SendCustomEvent(String name) async {
+  Future<void> _sendCustomEvent(String name) async {
     await FirebaseAnalytics.instance.logEvent(name: name);
+  }
+
+  Future<void> _sendCustomEventWithMessage(String name, String message) async {
+    await FirebaseAnalytics.instance
+        .logEvent(name: name, parameters: {"message": "$message"});
   }
 
   @override
@@ -204,19 +225,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
 //Send firebase score event
         nowRating = response.rating;
         if (nowRating == 1.0) {
-          _SendCustomEvent('rating_1');
+          _sendCustomEvent('rating_1');
         }
         if (nowRating == 2.0) {
-          _SendCustomEvent('rating_2');
+          _sendCustomEvent('rating_2');
         }
         if (nowRating == 3.0) {
-          _SendCustomEvent('rating_3');
+          _sendCustomEvent('rating_3');
         }
         if (nowRating == 4.0) {
-          _SendCustomEvent('rating_4');
+          _sendCustomEvent('rating_4');
         }
         if (nowRating == 5.0) {
-          _SendCustomEvent('rating_5');
+          _sendCustomEvent('rating_5');
         }
         if (response.rating < 4.0) {
           _showBadDialog();
@@ -237,7 +258,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void _showGoodDialog() {
     // actual store listing review & rating
     void _rateAndReviewApp() async {
-      _SendCustomEvent('goodSetYES');
+      _sendCustomEvent('goodSetYES');
       if (_availability == Availability.available) {
         //Request google play rating dialog if it is available
         _requestReview();
@@ -307,6 +328,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       submitButtonText: button4,
       onSubmitted: (response) {
         nowRating = response.rating;
+        _sendCustomEventWithMessage("bad_review_message", response.comment);
         _showFinalDialog();
       },
     );
@@ -363,17 +385,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
       resizeToAvoidBottomInset: true,
 
 // If clicked on the background, the review will be canceled
-      body: GestureDetector(
-        onTap: () {
-          _SendCustomEvent("reviewCanceled");
-          _navigateToHome();
-        },
-        child: Container(
-          color: const Color(0xff2050F6),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: new Image.asset('assets/images/splash_back.png'),
-          ),
+      body: Container(
+        color: const Color(0xFFA9D6FF),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: new Image.asset('assets/images/splash_back.png'),
         ),
       ),
     );

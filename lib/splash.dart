@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -7,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:loanproject/loading_screen.dart';
 import 'package:loanproject/main.dart';
 import 'package:loanproject/state.dart';
-import 'package:loanproject/tutorial/first.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'var.dart' as variables;
 
 bool obNavSkip = false;
 
@@ -42,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final _appState = Provider.of<AppState>(context, listen: false);
     getOSId();
     getFRBId();
+    refDetailsBase64(variables.getRefDetails);
     Timer(Duration(seconds: 3), () {
       if (mounted && !obNavSkip) {
         if (_appState.darkMode == false) {
@@ -62,7 +64,12 @@ class _SplashScreenState extends State<SplashScreen> {
     final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
     final _appState = Provider.of<AppState>(context, listen: false);
-    _appState.setFBUID(await await analytics.appInstanceId  ?? "null");
+    _appState.setFBUID(await await analytics.appInstanceId ?? "null");
+  }
+
+  refDetailsBase64(String refDetails) {
+    final _appState = Provider.of<AppState>(context, listen: false);
+    _appState.setRef(base64.encode(utf8.encode(refDetails)));
   }
 
   Future<bool?> logEvent(String eventName, Map eventValues) async {

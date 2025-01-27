@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 // import 'firebase_options.dart';
+import 'package:android_play_install_referrer/android_play_install_referrer.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -47,9 +48,6 @@ Future<void> main() async {
     _count = _count ?? 0 + 1;
     pref.setInt("count", _count);
   }
-
-  await afInit();
-  await osInitialize();
   await remoteConfig.activate();
   log(await analytics.appInstanceId ?? "appInstanceId : none");
 
@@ -70,6 +68,25 @@ Future<void> main() async {
   } catch (exception) {
     log(exception.toString());
   }
+
+  String? nowRef = pref.getString('getRefDetails') ?? '';
+  if (nowRef != '') {
+    variables.getRefDetails = nowRef;
+  } else {
+    try {
+      ReferrerDetails referrerDetails =
+          await AndroidPlayInstallReferrer.installReferrer;
+      variables.getRefDetails = referrerDetails.toString();
+      pref
+          .setString('getRefDetails', referrerDetails.toString())
+          .then((bool success) {
+        return referrerDetails.toString();
+      });
+    } catch (e) {}
+  }
+
+  await afInit();
+  await osInitialize();
 
   runApp(
     MultiProvider(

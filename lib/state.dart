@@ -39,6 +39,15 @@ class AppState extends ChangeNotifier {
       notifyListeners();
     });
   }
+  ///FirebaseID
+  String? _ref;
+  String? get ref => _ref;
+  void setRef(String tkn) {
+    _ref = tkn;
+    Future.delayed(Duration.zero, () {
+      notifyListeners();
+    });
+  }
 
   ///ID
   String? _id;
