@@ -96,18 +96,31 @@ class RatingDialog extends StatefulWidget {
 
 class _RatingDialogState extends State<RatingDialog> {
   final _commentController = TextEditingController();
+  bool _isSubmitEnabled = false;
   RatingDialogResponse? _response;
 
   @override
   void initState() {
     super.initState();
     _response = RatingDialogResponse(rating: widget.initialRating);
+
+    _commentController.addListener(() {
+      setState(() {
+        _isSubmitEnabled = _commentController.text.trim().isNotEmpty;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final _content = Stack(
-      children: <Widget>[
+      children: [
         ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(15.0),
@@ -132,7 +145,7 @@ class _RatingDialogState extends State<RatingDialog> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
+                children: [
                   widget.image != null
                       ? Padding(
                           padding: const EdgeInsets.only(top: 25, bottom: 25),
@@ -219,7 +232,9 @@ class _RatingDialogState extends State<RatingDialog> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: _response!.rating == 0
+                        onTap: (widget.enableComment &&
+                                    _commentController.text.trim().isEmpty) ||
+                                _response!.rating == 0
                             ? null
                             : () {
                                 if (!widget.force) Navigator.pop(context);
@@ -243,7 +258,7 @@ class _RatingDialogState extends State<RatingDialog> {
                             margin: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                             child: Stack(
                               alignment: Alignment.center,
-                              children: <Widget>[
+                              children: [
                                 Center(
                                   child: Text(
                                     widget.submitButtonText.toUpperCase(),
@@ -271,7 +286,7 @@ class _RatingDialogState extends State<RatingDialog> {
                               padding: const EdgeInsets.fromLTRB(2, 7, 2, 7),
                               child: Stack(
                                 alignment: Alignment.center,
-                                children: <Widget>[
+                                children: [
                                   Center(
                                     child: Text(
                                       widget.secondButtonText,
@@ -313,17 +328,20 @@ class _RatingDialogState extends State<RatingDialog> {
       scrollable: true,
       title: _content,
 */
-    return Material(
-      color: Colors.transparent, // <-- Add this, if needed
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: GestureDetector(
-          onTap: () {}, //This way is not going to afect  the inside widget
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: _content,
+    return PopScope(
+      canPop: false,
+      child: Material(
+        color: Colors.transparent, // <-- Add this, if needed
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: GestureDetector(
+            onTap: () {}, //This way is not going to afect  the inside widget
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: _content,
+              ),
             ),
           ),
         ),
@@ -342,11 +360,12 @@ class RatingDialogResponse {
   RatingDialogResponse({this.rating = 0.0, this.comment = ''});
 }
 
-BoxDecoration boxDecoration(
-    {double radius = 2,
-    Color color = Colors.transparent,
-    Color? bgColor,
-    var showShadow = false}) {
+BoxDecoration boxDecoration({
+  double radius = 2,
+  Color color = Colors.transparent,
+  Color? bgColor,
+  var showShadow = false,
+}) {
   return BoxDecoration(
     color: bgColor,
     boxShadow: const [BoxShadow(color: Colors.transparent)],

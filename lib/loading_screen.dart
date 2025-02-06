@@ -13,29 +13,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'var.dart' as variables;
 
-const String title1 = "How to Use the App:";
-const String message1 =
+const String firstDialogTitle = "How to Use the App:";
+const String firstDialogMessage =
     "1. Fill out the simple form to request your funds.\n\n2. Review and agree to the terms to proceed.\n\n3. Wait for your money to be deposited into your account.		\n\n";
-const String button1 = "Continue";
+const String firstDialogButtonText = "Continue";
 
-const String title2 = "Please Rate Us:";
-const String message2 =
+const String ratingDialogTitle = "Please Rate Us:";
+const String ratingDialogMessage =
     "Your opinion matters to us! We’d love to hear what you think about our app.			\n";
-const String button2 = "Submit";
+const String ratingDialogButtonText = "Submit";
 
-const String title3 = "Thank you for your positive rating!";
-const String message3 =
+const String goodDialogTitle = "Thank you for your positive rating!";
+const String goodDialogMessage =
     "We’d love it if you could share your review on Google Play to help us improve.			\n";
-const String button3 = "Rate on the Play Store";
+const String goodDialogButtonText = "Rate on the Play Store";
 
-const String title4 = "We’re sorry to hear that.";
-const String message4 =
+const String badDialogTitle = "We’re sorry to hear that.";
+const String badDialogMessage =
     "If the app fell short of your expectations, please share how we can improve.			\n";
-const String button4 = "Submit";
+const String badDialogButtonText = "Submit";
 
-const String title5 = "We’ve received your message.";
-const String message5 = "Thanks for taking the time to share your feedback.		";
-const String button5 = "Continue";
+const String finalDialogTitle = "We’ve received your message.";
+const String finalDialogMessage =
+    "Thanks for taking the time to share your feedback.		";
+const String finalDialogButtonText = "Continue";
 
 const TextStyle titleStyle = TextStyle(
     fontSize: 21,
@@ -167,13 +168,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final _dialog = RatingDialog(
       initialRating: 5,
       title: const Text(
-        title1,
+        firstDialogTitle,
         textAlign: TextAlign.center,
         style: titleStyle,
       ),
       submitButtonTextStyle: submitButtonStyle,
       message: const Text(
-        message1,
+        firstDialogMessage,
         textAlign: TextAlign.left,
         style: messageStyle,
       ),
@@ -182,7 +183,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       force: false,
       secondButton: false,
       enableComment: false,
-      submitButtonText: button1,
+      submitButtonText: firstDialogButtonText,
       onSubmitted: (response) {
         _showRatingDialog();
       },
@@ -204,13 +205,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       initialRating: nowRating,
       // your app's name?
       title: const Text(
-        title2,
+        ratingDialogTitle,
         textAlign: TextAlign.center,
         style: titleStyle,
       ),
       submitButtonTextStyle: submitButtonStyle,
       message: const Text(
-        message2,
+        ratingDialogMessage,
         textAlign: TextAlign.left,
         style: messageStyle,
       ),
@@ -220,7 +221,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       force: false,
       secondButton: false,
       enableComment: false,
-      submitButtonText: button2,
+      submitButtonText: ratingDialogButtonText,
       onSubmitted: (response) {
 //Send firebase score event
         nowRating = response.rating;
@@ -269,7 +270,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final _dialog = RatingDialog(
       initialRating: nowRating,
       title: const Text(
-        title3,
+        goodDialogTitle,
         textAlign: TextAlign.center,
         style: titleStyle,
       ),
@@ -277,7 +278,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       ignore: true,
       submitButtonTextStyle: submitButtonStyle,
       message: const Text(
-        message3,
+        goodDialogMessage,
         textAlign: TextAlign.left,
         style: messageStyle,
       ),
@@ -286,7 +287,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       force: false,
       enableComment: false,
       secondButtonTextStyle: submitButtonStyle,
-      submitButtonText: button3,
+      submitButtonText: goodDialogButtonText,
       onSubmitted: (response) {
         nowRating = response.rating;
         if (response.rating < 4.0 || response.rating > 20.0) {
@@ -309,14 +310,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final _dialog = RatingDialog(
       initialRating: nowRating,
       title: const Text(
-        title4,
+        badDialogTitle,
         textAlign: TextAlign.center,
         style: titleStyle,
       ),
       ignore: true,
       submitButtonTextStyle: submitButtonStyle,
       message: const Text(
-        message4,
+        badDialogMessage,
         textAlign: TextAlign.left,
         style: messageStyle,
       ),
@@ -325,7 +326,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       starSize: 30,
       force: false,
       enableComment: true,
-      submitButtonText: button4,
+      submitButtonText: badDialogButtonText,
       onSubmitted: (response) {
         nowRating = response.rating;
         _sendCustomEventWithMessage("bad_review_message", response.comment);
@@ -346,13 +347,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       initialRating: nowRating,
       // your app's name?
       title: const Text(
-        title5,
+        finalDialogTitle,
         textAlign: TextAlign.center,
         style: titleStyle,
       ),
       submitButtonTextStyle: submitButtonStyle,
       message: const Text(
-        message5,
+        finalDialogMessage,
         textAlign: TextAlign.left,
         style: messageStyle,
       ),
@@ -362,7 +363,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       force: false,
       enableComment: false,
       secondButton: false,
-      submitButtonText: button5,
+      submitButtonText: finalDialogButtonText,
       onSubmitted: (response) {
         if (mounted) {
           Navigator.pop(context);
@@ -381,15 +382,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-
-// If clicked on the background, the review will be canceled
-      body: Container(
-        color: const Color(0xFFA9D6FF),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: new Image.asset('assets/images/splash_back.png'),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Container(
+          color: const Color(0xFFA9D6FF),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: new Image.asset('assets/images/splash_back.png'),
+          ),
         ),
       ),
     );
