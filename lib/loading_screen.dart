@@ -74,7 +74,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> _requestReview() async {
     if (await _inAppReview.isAvailable()) {
       // Open the store review page
-      _inAppReview.openStoreListing();
+      _inAppReview.requestReview();
     } else {
       _showRatingDialog();
     }
