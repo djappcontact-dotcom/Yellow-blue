@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace "com.quick.loans.online.instant.money"
-    compileSdkVersion 35
+    compileSdkVersion 36
     ndkVersion "25.1.8937393"
 
     compileOptions {
@@ -48,8 +48,8 @@ android {
 
     defaultConfig {
         applicationId "com.quick.loans.online.instant.money"
-        minSdkVersion 21
-        targetSdkVersion 35
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true

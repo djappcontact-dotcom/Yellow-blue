@@ -27,13 +27,14 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  android_play_install_referrer: ^0.4.0
+  play_install_referrer: ^0.5.0
   appsflyer_sdk: ^6.12.2
   connectivity_plus: ^6.1.0
   cupertino_icons: ^1.0.2
   firebase_analytics: ^11.3.6
   firebase_core: ^3.8.1
   firebase_remote_config: ^5.2.0
+  firebase_messaging: ^15.2.1
   flutter:
     sdk: flutter
   flutter_inappwebview: ^6.0.0
