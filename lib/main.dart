@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 // import 'firebase_options.dart';
-import 'package:android_play_install_referrer/android_play_install_referrer.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,6 +18,7 @@ import 'package:loanproject/tutorial/first.dart';
 import 'package:loanproject/webview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:play_install_referrer/play_install_referrer.dart';
 import 'package:provider/provider.dart';
 import 'var.dart' as variables;
 
@@ -75,7 +75,7 @@ Future<void> main() async {
   } else {
     try {
       ReferrerDetails referrerDetails =
-          await AndroidPlayInstallReferrer.installReferrer;
+          await PlayInstallReferrer.installReferrer;
       variables.getRefDetails = referrerDetails.toString();
       pref
           .setString('getRefDetails', referrerDetails.toString())
