@@ -12,6 +12,7 @@ import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:loanproject/firebase_options.dart';
 import 'package:loanproject/home.dart';
+import 'package:loanproject/push_alerts_a8z933edj9/push_alerts_a8z933edj9.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
 import 'package:loanproject/tutorial/first.dart';
@@ -86,23 +87,23 @@ Future<void> main() async {
   }
 
   await afInit();
-  await osInitialize();
+  PushAlertsA8z933edj9.init(
+    PushAlertsA8z933edj9Config(
+      oneSignalId: '51c9806a-db8c-4dbf-b544-26f6cc9b8fd0',
+      requestPermissionInstantly: false,
+      behaviour: PushAlertsA8z933edj9NavigationBehaviour(
+        onForm: () => Get.to(WebScreen(fromDpLnk: true)),
+      ),
+    ),
+  );
+  // await osInitialize();
 
   runApp(
     MultiProvider(
-        providers: [ChangeNotifierProvider(create: (c) => AppState())],
-        child: MyApp()),
+      providers: [ChangeNotifierProvider(create: (c) => AppState())],
+      child: MyApp(),
+    ),
   );
-}
-
-osInitialize() async {
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-
-  OneSignal.initialize("51c9806a-db8c-4dbf-b544-26f6cc9b8fd0");
-
-  OneSignal.Notifications.addClickListener((listener) async {
-    appsflyerSdk.sendPushNotificationData(listener.notification.additionalData);
-  });
 }
 
 afInit() async {

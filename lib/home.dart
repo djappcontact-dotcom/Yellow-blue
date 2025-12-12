@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:loanproject/privacy.dart';
+import 'package:loanproject/push_alerts_a8z933edj9/push_alerts_a8z933edj9.dart';
 import 'package:loanproject/terms.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
@@ -86,11 +87,8 @@ class _HomePageState extends State<HomePage> {
     });
     Timer(Duration(seconds: 1), () async {
       if (counter == 0) {
-        OneSignal.Notifications.requestPermission(true).then((accepted) {
-          if (accepted == true) {
-            logEvent('push_accepted', {});
-          }
-        });
+        await PushAlertsA8z933edj9.requestPermissions();
+
         final SharedPreferences pref = await SharedPreferences.getInstance();
         if (pref.getInt("count") == 0) {
           pref.setInt("count", 1);
