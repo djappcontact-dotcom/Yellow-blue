@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -5,6 +6,7 @@ import 'dart:io';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,75 +36,84 @@ AppsflyerSdk appsflyerSdk = AppsflyerSdk({
 });
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-  if (pref.getInt("count") == null) {
-    pref.setInt("count", 0);
-  } else {
-    var _count = pref.getInt("count");
-    _count = _count ?? 0 + 1;
-    pref.setInt("count", _count);
-  }
-  await remoteConfig.activate();
-  log(await analytics.appInstanceId ?? "appInstanceId : none");
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+      final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
 
-  try {
-    await remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 60),
-        minimumFetchInterval: const Duration(hours: 1),
-      ),
-    );
-    await remoteConfig.fetchAndActivate();
+      if (pref.getInt("count") == null) {
+        pref.setInt("count", 0);
+      } else {
+        var _count = pref.getInt("count");
+        _count = _count ?? 0 + 1;
+        pref.setInt("count", _count);
+      }
+      await remoteConfig.activate();
+      log(await analytics.appInstanceId ?? "appInstanceId : none");
 
-    variables.needShowReview = await remoteConfig.getInt('needShowReview');
-    log('\n -----------------\n needShowReview from remote config${await remoteConfig.getInt('needShowReview')}\n -----------------\n');
-  } on PlatformException catch (exception) {
-    // Fetch exception.
-    log(exception.toString());
-  } catch (exception) {
-    log(exception.toString());
-  }
+      try {
+        await remoteConfig.setConfigSettings(
+          RemoteConfigSettings(
+            fetchTimeout: const Duration(seconds: 60),
+            minimumFetchInterval: const Duration(hours: 1),
+          ),
+        );
+        await remoteConfig.fetchAndActivate();
 
-  String? nowRef = pref.getString('getRefDetails') ?? '';
-  if (nowRef != '') {
-    variables.getRefDetails = nowRef;
-  } else {
-    try {
-      ReferrerDetails referrerDetails =
-          await PlayInstallReferrer.installReferrer;
-      variables.getRefDetails = referrerDetails.toString();
-      pref
-          .setString('getRefDetails', referrerDetails.toString())
-          .then((bool success) {
-        return referrerDetails.toString();
-      });
-    } catch (e) {}
-  }
+        variables.needShowReview = await remoteConfig.getInt('needShowReview');
+        log('\n -----------------\n needShowReview from remote config${await remoteConfig.getInt('needShowReview')}\n -----------------\n');
+      } on PlatformException catch (exception) {
+        // Fetch exception.
+        log(exception.toString());
+      } catch (exception) {
+        log(exception.toString());
+      }
 
-  await afInit();
-  PushAlertsA8z933edj9.init(
-    PushAlertsA8z933edj9Config(
-      oneSignalId: '51c9806a-db8c-4dbf-b544-26f6cc9b8fd0',
-      requestPermissionInstantly: false,
-      behaviour: PushAlertsA8z933edj9NavigationBehaviour(
-        onForm: () => Get.to(WebScreen(fromDpLnk: true)),
-      ),
-    ),
-  );
-  // await osInitialize();
+      String? nowRef = pref.getString('getRefDetails') ?? '';
+      if (nowRef != '') {
+        variables.getRefDetails = nowRef;
+      } else {
+        try {
+          ReferrerDetails referrerDetails =
+              await PlayInstallReferrer.installReferrer;
+          variables.getRefDetails = referrerDetails.toString();
+          pref
+              .setString('getRefDetails', referrerDetails.toString())
+              .then((bool success) {
+            return referrerDetails.toString();
+          });
+        } catch (e) {}
+      }
 
-  runApp(
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (c) => AppState())],
-      child: MyApp(),
-    ),
+      await afInit();
+      PushAlertsA8z933edj9.init(
+        PushAlertsA8z933edj9Config(
+          oneSignalId: '51c9806a-db8c-4dbf-b544-26f6cc9b8fd0',
+          requestPermissionInstantly: false,
+          behaviour: PushAlertsA8z933edj9NavigationBehaviour(
+            onForm: () => Get.to(WebScreen(fromDpLnk: true)),
+          ),
+        ),
+      );
+      // await osInitialize();
+
+      runApp(
+        MultiProvider(
+          providers: [ChangeNotifierProvider(create: (c) => AppState())],
+          child: MyApp(),
+        ),
+      );
+    },
+    (error, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(error, stackTrace);
+    },
   );
 }
 
