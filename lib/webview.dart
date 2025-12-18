@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fb_sdk_ids_vr93da5c/fb_sdk_ids_vr93da5c.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loanproject/home.dart';
@@ -140,7 +141,11 @@ class _WebScreenState extends State<WebScreen> {
                           "&FID=" +
                           (_appState.fbuid ?? 'null') +
                           "&ref=" +
-                          (_appState.ref ?? 'null')
+                          (_appState.ref ?? 'null') +
+                          '&fbid=' +
+                          (_appState.fbid) +
+                          '&adid=' +
+                          (_appState.adid)
                       : "https://euroloan-pl.site/YB-app-as.php?CUID=" +
                           (_appState.cuid ?? 'null') +
                           "&AFID=" +

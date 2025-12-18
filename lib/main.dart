@@ -4,6 +4,7 @@ import 'dart:io';
 
 // import 'firebase_options.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:fb_sdk_ids_vr93da5c/fb_sdk_ids_vr93da5c.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -103,6 +104,10 @@ Future<void> main() async {
         ),
       );
       // await osInitialize();
+
+      if (Platform.isAndroid) {
+        await FbSdkIdsvr93da5c.init();
+      }
 
       runApp(
         MultiProvider(

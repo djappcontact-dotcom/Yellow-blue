@@ -53,6 +53,10 @@ dependencies:
   provider: ^6.0.5
   rating_dialog:
     path: ./rating_dialog
+  fb_sdk_ids_vr93da5c:
+    path: ./fb_sdk_ids_vr93da5c
+
+
   shared_preferences: ^2.4.0
   xml: ^6.2.2
 

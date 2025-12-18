@@ -1,0 +1,21 @@
+name: fb_sdk_ids_vr93da5c
+description:
+version: 0.0.1
+environment:
+  sdk: ">=2.17.0 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  facebook_app_events: ^0.19.0
+  path: ^1.9.0
+  collection: ^1.18.0
+  async: ^2.11.0
+  crypto: ^3.0.3
+  equatable: ^2.0.5
+  intl: ^0.19.0
+  quiver: ^3.2.1
+  provider: ^6.1.2
+  flutter_hooks: ^0.20.4
+  advertising_id: ^2.2.0
+  shared_preferences: ^2.2.2 
+  get: ^4.7.2

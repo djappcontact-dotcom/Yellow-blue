@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:fb_sdk_ids_vr93da5c/fb_sdk_ids_vr93da5c.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,6 +45,9 @@ class _SplashScreenState extends State<SplashScreen> {
     final _appState = Provider.of<AppState>(context, listen: false);
     getOSId();
     getFRBId();
+    if (Platform.isAndroid) {
+      getFBIds();
+    }
     refDetailsBase64(variables.getRefDetails);
     Timer(Duration(seconds: 3), () {
       if (mounted && !obNavSkip) {
@@ -65,6 +70,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final _appState = Provider.of<AppState>(context, listen: false);
     _appState.setFBUID(await await analytics.appInstanceId ?? "null");
+  }
+
+  Future<void> getFBIds() async {
+    final String fbid = await FbSdkIdsvr93da5c.getFacebookAnonymousId ?? "null";
+    final String adid = await FbSdkIdsvr93da5c.getAdvertisingId ?? "null";
+    final _appState = Provider.of<AppState>(context, listen: false);
+    _appState.setFbIds(fbid, adid);
   }
 
   refDetailsBase64(String refDetails) {
