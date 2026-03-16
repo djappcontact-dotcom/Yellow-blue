@@ -85,6 +85,8 @@ class _HomePageState extends State<HomePage> {
         Get.to(() => WebScreen(fromDpLnk: true));
       }
     });
+    PushAlertsA8z933edj9.handleFCMLaunchNotification();
+
     Timer(Duration(seconds: 1), () async {
       if (counter == 0) {
         await PushAlertsA8z933edj9.requestPermissions();
@@ -253,8 +255,8 @@ class _HomePageState extends State<HomePage> {
                           ]),
                       InkWell(
                         onTap: () async {
-                          _appState.setOSID(
-                              await OneSignal.User.getOnesignalId() ?? 'null');
+                          // _appState.setOSID(
+                              // await OneSignal.User.getOnesignalId() ?? 'null');
                           Navigator.push(
                             context,
                             MaterialPageRoute(

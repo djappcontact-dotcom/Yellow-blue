@@ -33,6 +33,9 @@ class PushAlertsA8z933edj9 {
     );
   }
 
+  static Future<void> handleFCMLaunchNotification() =>
+      Fcma8z933edj9Service.handleLaunchNotification();
+
   static Future<void> _initOneSignal() async {
     final config = PushAlertsA8z933edj9Config.to;
 
