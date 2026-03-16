@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' hide log;
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 
@@ -95,7 +96,7 @@ class _WebScreenState extends State<WebScreen> {
 
   final GlobalKey webViewKey = GlobalKey();
 
-  InAppWebViewController? webViewController;
+  final _controllerNotifier = ValueNotifier<InAppWebViewController?>(null);
 
   String url = "";
   double progress = 0;
@@ -111,7 +112,6 @@ class _WebScreenState extends State<WebScreen> {
     return StreamBuilder<List<ConnectivityResult>>(
       stream: _connectivity.onConnectivityChanged,
       builder: (context, _) {
-        print(_connectionStatus);
         if (_connectionStatus != ConnectivityResult.none) {
           return Scaffold(
             extendBodyBehindAppBar: true,
@@ -121,43 +121,50 @@ class _WebScreenState extends State<WebScreen> {
                 leading: GestureDetector(
                   child: Icon(Icons.arrow_back_ios,
                       color: Color.fromRGBO(208, 201, 214, 1)),
-                  onTap: () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => HomePage())),
+                  onTap: () => Navigator.pop(context),
                 ),
                 systemOverlayStyle: SystemUiOverlayStyle.dark),
-            body: InAppWebView(
-              key: webViewKey,
-              initialUrlRequest: URLRequest(
-                url: WebUri.uri(
-                  Uri.parse(Platform.isAndroid
-                      ? "https://euroloan-pl.site/YB-app-gp.php?CUID=" +
-                          (_appState.cuid ?? 'null') +
-                          "&AFID=" +
-                          (_appState.id ?? 'null') +
-                          "&OSID=" +
-                          _osidCheck +
-                          "&FID=" +
-                          (_appState.fbuid ?? 'null') +
-                          "&ref=" +
-                          (_appState.ref ?? 'null') +
-                          '&fbid=' +
-                          (_appState.fbid) +
-                          '&adid=' +
-                          (_appState.adid)
-                      : "https://euroloan-pl.site/YB-app-as.php?CUID=" +
-                          (_appState.cuid ?? 'null') +
-                          "&AFID=" +
-                          (_appState.id ?? 'null') +
-                          "&OSID=" +
-                          _osidCheck),
-                ),
-              ),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webViewController = controller;
-              },
-            ),
+            body: ValueListenableBuilder(
+                valueListenable: _controllerNotifier,
+                builder: (context, controller, _) {
+                  return Stack(
+                    children: [
+                      if (controller == null)
+                        const Center(child: CircularProgressIndicator()),
+                      InAppWebView(
+                        key: webViewKey,
+                        initialUrlRequest: URLRequest(
+                          url: WebUri.uri(
+                            Uri.parse(Platform.isAndroid
+                                ? "https://euroloan-pl.site/YB-app-gp.php?CUID=" +
+                                    (_appState.cuid ?? 'null') +
+                                    "&AFID=" +
+                                    (_appState.id ?? 'null') +
+                                    "&OSID=" +
+                                    _osidCheck +
+                                    "&FID=" +
+                                    (_appState.fbuid ?? 'null') +
+                                    "&ref=" +
+                                    (_appState.ref ?? 'null') +
+                                    '&fbid=' +
+                                    (_appState.fbid) +
+                                    '&adid=' +
+                                    (_appState.adid)
+                                : "https://euroloan-pl.site/YB-app-as.php?CUID=" +
+                                    (_appState.cuid ?? 'null') +
+                                    "&AFID=" +
+                                    (_appState.id ?? 'null') +
+                                    "&OSID=" +
+                                    _osidCheck),
+                          ),
+                        ),
+                        onWebViewCreated: (InAppWebViewController controller) {
+                          _controllerNotifier.value = controller;
+                        },
+                      )
+                    ],
+                  );
+                }),
           );
         } else {
           double height = MediaQuery.of(context).size.height;
@@ -206,10 +213,7 @@ class _WebScreenState extends State<WebScreen> {
                             Icons.arrow_back_ios,
                             color: Color(0xFF1D1D1D),
                           ),
-                          onPressed: () => Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage())),
+                          onPressed: () => Navigator.pop(context),
                         ),
                       ),
                     ),

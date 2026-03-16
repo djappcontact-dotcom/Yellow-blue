@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 3), () {
       if (mounted && !obNavSkip) {
         if (_appState.darkMode == false) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
             return LoadingScreen();
           }));
         }

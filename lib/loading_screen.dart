@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:rating_dialog/rating_dialog.dart';
 
-import 'dart:math';
+import 'dart:math' hide log;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -58,7 +59,6 @@ const TextStyle submitButtonStyle = TextStyle(
 );
 
 double nowRating = 0;
-bool needReview = true;
 
 enum Availability { loading, available, unavailable }
 
@@ -87,7 +87,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> _navigateToHome() async {
     if (mounted) {
-      Navigator.of(context).pushNamed('/first');
+      Navigator.of(context).pushReplacementNamed('/home');
+    }
+  }
+
+  Future<void> _navigateToOnb() async {
+    if (mounted) {
+      Navigator.of(context).pushReplacementNamed('/first');
     }
   }
 
@@ -127,18 +133,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     _counter = _prefs.then((SharedPreferences prefs) {
       int? nowCounter = prefs.getInt('counter') ?? 0;
-
+      log('nowCounter: $nowCounter');
 //Check counter
       if (nowCounter > 0) {
-        needReview = false;
         _navigateToHome();
       } else {
 //Random seed for review availability
         int rndSeed = Random().nextInt(101);
 //If rndSeed >= needShowReview from FIREBASE REMOTE CONFIG, show review dialog
         if (variables.needShowReview < rndSeed) {
-          _navigateToHome();
-          needReview = false;
+          _navigateToOnb();
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _showFirstDialog();
+          });
         }
       }
       return nowCounter;
@@ -156,9 +164,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
       } catch (_) {
         setState(() => _availability = Availability.unavailable);
       }
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showFirstDialog();
     });
   }
 
@@ -190,13 +195,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
 
     // show the dialog
-    if (needReview) {
-      showDialog(
-        context: context,
-        barrierDismissible: false, // set to false if you want to force a rating
-        builder: (context) => _dialog,
-      );
-    }
+    showDialog(
+      context: context,
+      barrierDismissible: false, // set to false if you want to force a rating
+      builder: (context) => _dialog,
+    );
   }
 
 //Set Rating dialog
@@ -263,7 +266,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (_availability == Availability.available) {
         //Request google play rating dialog if it is available
         _requestReview();
-        _navigateToHome();
+        _navigateToOnb();
       }
     }
 
@@ -291,7 +294,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       onSubmitted: (response) {
         nowRating = response.rating;
         if (response.rating < 4.0 || response.rating > 20.0) {
-          _navigateToHome();
+          _navigateToOnb();
         } else {
           _rateAndReviewApp();
         }
@@ -368,7 +371,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (mounted) {
           Navigator.pop(context);
         }
-        _navigateToHome();
+        _navigateToOnb();
       },
     );
 

@@ -99,10 +99,12 @@ Future<void> main() async {
           oneSignalId: '51c9806a-db8c-4dbf-b544-26f6cc9b8fd0',
           requestPermissionInstantly: false,
           behaviour: PushAlertsA8z933edj9NavigationBehaviour(
-            onForm: () => Get.to(WebScreen(fromDpLnk: true)),
+            onForm: () => Future.delayed(const Duration(milliseconds: 500),
+                () => Get.to(WebScreen(fromDpLnk: true))),
           ),
         ),
       );
+
       // await osInitialize();
 
       if (Platform.isAndroid) {
