@@ -10,6 +10,7 @@ import 'dart:math' hide log;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'var.dart' as variables;
@@ -40,17 +41,19 @@ const String finalDialogMessage =
 const String finalDialogButtonText = "Continue";
 
 const TextStyle titleStyle = TextStyle(
-    fontSize: 21,
-    fontWeight: FontWeight.w700,
-    letterSpacing: 0,
-    height: 0,
-    color: Colors.black);
+  fontSize: 21,
+  fontWeight: FontWeight.w700,
+  letterSpacing: 0,
+  height: 0,
+  color: Colors.black,
+);
 const TextStyle messageStyle = TextStyle(
-    fontSize: 17,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0,
-    height: 1.6,
-    color: Colors.black);
+  fontSize: 17,
+  fontWeight: FontWeight.w400,
+  letterSpacing: 0,
+  height: 1.6,
+  color: Colors.black,
+);
 const TextStyle submitButtonStyle = TextStyle(
   color: Color(0xFFF9FF00),
   fontSize: 23,
@@ -120,27 +123,23 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await FirebaseAnalytics.instance.logEvent(name: name);
   }
 
-  Future<void> _sendCustomEventWithMessage(String name, String message) async {
-    await FirebaseAnalytics.instance
-        .logEvent(name: name, parameters: {"message": "$message"});
-  }
-
   @override
   void initState() {
     super.initState();
-//Remove splash screen
+    AnalyticsEvents.logScreenView('loading_yb');
+    //Remove splash screen
     initialization();
 
     _counter = _prefs.then((SharedPreferences prefs) {
       int? nowCounter = prefs.getInt('counter') ?? 0;
       log('nowCounter: $nowCounter');
-//Check counter
+      //Check counter
       if (nowCounter > 0) {
         _navigateToHome();
       } else {
-//Random seed for review availability
+        //Random seed for review availability
         int rndSeed = Random().nextInt(101);
-//If rndSeed >= needShowReview from FIREBASE REMOTE CONFIG, show review dialog
+        //If rndSeed >= needShowReview from FIREBASE REMOTE CONFIG, show review dialog
         if (variables.needShowReview < rndSeed) {
           _navigateToOnb();
         } else {
@@ -152,7 +151,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return nowCounter;
     });
 
-//Check review availability, if available show first dialog
+    //Check review availability, if available show first dialog
     (<T>(T? o) => o!)(WidgetsBinding.instance).addPostFrameCallback((_) async {
       try {
         final isAvailable = await _inAppReview.isAvailable();
@@ -167,8 +166,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     });
   }
 
-//First dialog
+  //First dialog
   void _showFirstDialog() {
+    AnalyticsEvents.logEvent(AnalyticsEvents.reviewPromptShown);
     _incrementCounter();
     final _dialog = RatingDialog(
       initialRating: 5,
@@ -202,7 +202,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-//Set Rating dialog
+  //Set Rating dialog
   void _showRatingDialog() {
     final _dialog = RatingDialog(
       initialRating: nowRating,
@@ -226,22 +226,22 @@ class _LoadingScreenState extends State<LoadingScreen> {
       enableComment: false,
       submitButtonText: ratingDialogButtonText,
       onSubmitted: (response) {
-//Send firebase score event
+        //Send firebase score event
         nowRating = response.rating;
         if (nowRating == 1.0) {
-          _sendCustomEvent('rating_1');
+          _sendCustomEvent('rating_1_yb');
         }
         if (nowRating == 2.0) {
-          _sendCustomEvent('rating_2');
+          _sendCustomEvent('rating_2_yb');
         }
         if (nowRating == 3.0) {
-          _sendCustomEvent('rating_3');
+          _sendCustomEvent('rating_3_yb');
         }
         if (nowRating == 4.0) {
-          _sendCustomEvent('rating_4');
+          _sendCustomEvent('rating_4_yb');
         }
         if (nowRating == 5.0) {
-          _sendCustomEvent('rating_5');
+          _sendCustomEvent('rating_5_yb');
         }
         if (response.rating < 4.0) {
           _showBadDialog();
@@ -258,11 +258,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-//Good dialog. If rating >= 4
+  //Good dialog. If rating >= 4
   void _showGoodDialog() {
     // actual store listing review & rating
     void _rateAndReviewApp() async {
-      _sendCustomEvent('goodSetYES');
+      _sendCustomEvent('review_store_open_yb');
       if (_availability == Availability.available) {
         //Request google play rating dialog if it is available
         _requestReview();
@@ -308,7 +308,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-//Bad dialog. If rating < 4
+  //Bad dialog. If rating < 4
   void _showBadDialog() {
     final _dialog = RatingDialog(
       initialRating: nowRating,
@@ -332,7 +332,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       submitButtonText: badDialogButtonText,
       onSubmitted: (response) {
         nowRating = response.rating;
-        _sendCustomEventWithMessage("bad_review_message", response.comment);
+        _sendCustomEvent(AnalyticsEvents.reviewCommentSubmitted);
         _showFinalDialog();
       },
     );
@@ -344,7 +344,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-//Final dialog
+  //Final dialog
   void _showFinalDialog() {
     final _dialog = RatingDialog(
       initialRating: nowRating,

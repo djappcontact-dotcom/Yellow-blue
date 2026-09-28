@@ -6,6 +6,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker_plus/picker.dart';
 import 'package:loanproject/size_config.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 Map appsFlyerOptions = {
@@ -44,6 +45,7 @@ class _CalculatState extends State<Calculat> {
   @override
   void initState() {
     super.initState();
+    AnalyticsEvents.logScreenView('calculator_yb');
     Map userId = {'open': 'open'};
     logEvent('calculator', userId);
   }

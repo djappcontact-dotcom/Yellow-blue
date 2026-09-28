@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
 
 class TermsPage extends StatefulWidget {
   const TermsPage({Key? key}) : super(key: key);
@@ -11,6 +12,12 @@ class TermsPage extends StatefulWidget {
 }
 
 class _SimplePageState extends State<TermsPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsEvents.logScreenView('terms_yb');
+  }
 
   @override
   Widget build(BuildContext context) {

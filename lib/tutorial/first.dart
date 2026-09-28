@@ -6,6 +6,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import '../models/slide.dart';
 import '../models/slide_item.dart';
 import '../size_config.dart';
+import '../tracking/analytics_events.dart';
 
 class FirstTutorial extends StatefulWidget {
   const FirstTutorial({Key? key}) : super(key: key);
@@ -25,6 +26,13 @@ class _FirstTutorialState extends State<FirstTutorial> {
   String _back = 'assets/images/img_backon1.png';
   String _backButton = 'assets/images/button1.svg';
   final PageController _pageController = PageController(initialPage: 0);
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsEvents.logScreenView('onboarding_yb');
+    logEvent('onbording1', {'open': 'open'});
+  }
 
   @override
   void didChangeDependencies() {
@@ -74,6 +82,12 @@ class _FirstTutorialState extends State<FirstTutorial> {
         _backButton = 'assets/images/button3.svg';
       }
     });
+
+    if (index == 1) {
+      logEvent('onbording2', {'open': 'open'});
+    } else if (index == 2) {
+      logEvent('onbording3', {'open': 'open'});
+    }
   }
 
   Future<bool?> logEvent(String eventName, Map eventValues) async {
@@ -142,13 +156,6 @@ class _FirstTutorialState extends State<FirstTutorial> {
       }
     }
 
-    if (_currentPage == 0) {
-      Map userId = {'open': 'open'};
-      logEvent('onbording1', userId);
-      logEvent('onbording2', userId);
-      logEvent('onbording3', userId);
-    }
-
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -184,13 +191,6 @@ class _FirstTutorialState extends State<FirstTutorial> {
                                 duration: Duration(milliseconds: 200),
                                 curve: Curves.easeOut);
 
-                            if (_currentPage == 1) {
-                              Map userId = {'open': 'open'};
-                              logEvent('onbording2', userId);
-                            } else if (_currentPage == 2) {
-                              Map userId = {'open': 'open'};
-                              logEvent('onbording3', userId);
-                            }
                           } else {
                             Navigator.pushNamed(context, '/home');
                           }

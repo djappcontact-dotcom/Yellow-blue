@@ -10,6 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
 import 'package:loanproject/webview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
@@ -79,6 +80,7 @@ class _HomePageState extends State<HomePage> {
     initApsSdk();
     setCounter();
     super.initState();
+    AnalyticsEvents.logScreenView('home_yb');
 
     Future.microtask(() {
       if (widget.fromDpLnk) {

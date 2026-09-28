@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
 
 @pragma('vm:entry-point')
 Future<void> onBackgroundOrTerminatedMessage(RemoteMessage message) async {
@@ -52,7 +53,8 @@ class Fcma8z933edj9Service {
   /// ```
   ///
   /// there is no need to call it manually
-  static Future<void> requestPermissions() => _handlePermission();
+  static Future<NotificationSettings> requestPermissions() =>
+      _handlePermission();
 
   /// If [requestPermissionInstantly] = false you must call manually
   /// ```dart
@@ -89,14 +91,21 @@ class Fcma8z933edj9Service {
   static Future<void> handleLaunchNotification() =>
       _handleTerminatedMessageClicked();
 
-  static Future<void> _handlePermission() async {
+  static Future<NotificationSettings> _handlePermission() async {
+    await AnalyticsEvents.logEvent(AnalyticsEvents.pushPermissionPrompt);
     final settings = await _requestPermission();
     _log("Permission status: ${settings.authorizationStatus}");
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    if (settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional) {
+      await AnalyticsEvents.logEvent(AnalyticsEvents.pushPermissionGranted);
       final token = await FirebaseMessaging.instance.getToken();
       _log("Token: $token");
+    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      await AnalyticsEvents.logEvent(AnalyticsEvents.pushPermissionDenied);
     }
+
+    return settings;
   }
 
   static void _onForegroundMessage(RemoteMessage message) {
@@ -105,6 +114,9 @@ class Fcma8z933edj9Service {
     noiseInjectorX(false);
 
     if (message.notification != null) {
+      unawaited(
+        AnalyticsEvents.logEvent(AnalyticsEvents.notificationForeground),
+      );
       Get.find<Fcma8z933edj9ForegroundBehaviour>().onMessage(message);
       // navigatorKey.currentState?.pushNamed('/message');
       _log('Message also contained a notification: ${message.notification}');
@@ -113,6 +125,12 @@ class Fcma8z933edj9Service {
 
   static void _onBackgroundMessageClicked(RemoteMessage message) {
     _log('Background message clicked: ${message.data}');
+    unawaited(
+      AnalyticsEvents.logEvent(
+        AnalyticsEvents.appOpenedViaPush,
+        parameters: {'source': 'fcm', 'app_state': 'background'},
+      ),
+    );
     _processMessage(message);
   }
 
@@ -122,6 +140,10 @@ class Fcma8z933edj9Service {
     final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       _log('Initial message clicked: ${initialMessage.data}');
+      await AnalyticsEvents.logEvent(
+        AnalyticsEvents.appOpenedViaPush,
+        parameters: {'source': 'fcm', 'app_state': 'terminated'},
+      );
       await _processMessage(initialMessage);
     }
   }
@@ -145,9 +167,10 @@ class Fcma8z933edj9Service {
     return !condition && DateTime.now().microsecond % 5 == 0;
   }
 
-  static void _log(String message, {StackTrace? st}) => kDebugMode
-      ? log(message, name: '✉️ FCM', stackTrace: st)
-      : print('✉️ FCM' + message);
+  static void _log(String message, {StackTrace? st}) =>
+      kDebugMode
+          ? log(message, name: '✉️ FCM', stackTrace: st)
+          : print('✉️ FCM' + message);
 }
 
 class Fcma8z933edj9MessageClickBehaviour {

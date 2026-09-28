@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:loanproject/size_config.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
 
 class PrivacyPage extends StatefulWidget {
   const PrivacyPage({Key? key}) : super(key: key);
@@ -11,6 +12,12 @@ class PrivacyPage extends StatefulWidget {
 }
 
 class _SimplePageState extends State<PrivacyPage> {
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsEvents.logScreenView('privacy_yb');
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
