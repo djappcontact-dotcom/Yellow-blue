@@ -4,7 +4,6 @@ import 'dart:io';
 
 // import 'firebase_options.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'package:fb_sdk_ids_vr93da5c/fb_sdk_ids_vr93da5c.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -18,6 +17,7 @@ import 'package:loanproject/home.dart';
 import 'package:loanproject/push_alerts_a8z933edj9/push_alerts_a8z933edj9.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
+import 'package:loanproject/tracking/app_tracking.dart';
 import 'package:loanproject/tutorial/first.dart';
 import 'package:loanproject/webview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -33,8 +33,10 @@ AppsflyerSdk appsflyerSdk = AppsflyerSdk({
   "afDevKey":
       Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
   "afAppId": '1570037577',
-  "isDebug": true
+  "isDebug": true,
 });
+
+const _pushWebViewLink = 'https://euroloan-pl.site/YB-app-gp-alt.php';
 
 Future<void> main() async {
   runZonedGuarded(
@@ -69,7 +71,9 @@ Future<void> main() async {
         await remoteConfig.fetchAndActivate();
 
         variables.needShowReview = await remoteConfig.getInt('needShowReview');
-        log('\n -----------------\n needShowReview from remote config${await remoteConfig.getInt('needShowReview')}\n -----------------\n');
+        log(
+          '\n -----------------\n needShowReview from remote config${await remoteConfig.getInt('needShowReview')}\n -----------------\n',
+        );
       } on PlatformException catch (exception) {
         // Fetch exception.
         log(exception.toString());
@@ -79,16 +83,18 @@ Future<void> main() async {
 
       String? nowRef = pref.getString('getRefDetails') ?? '';
       if (nowRef != '') {
-        variables.getRefDetails = nowRef;
+        // Migrate old builds that accidentally cached ReferrerDetails.toString().
+        variables.getRefDetails =
+            nowRef.startsWith('ReferrerDetails {') ? '' : nowRef;
       } else {
         try {
           ReferrerDetails referrerDetails =
               await PlayInstallReferrer.installReferrer;
-          variables.getRefDetails = referrerDetails.toString();
-          pref
-              .setString('getRefDetails', referrerDetails.toString())
-              .then((bool success) {
-            return referrerDetails.toString();
+          variables.getRefDetails = referrerDetails.installReferrer ?? '';
+          pref.setString('getRefDetails', variables.getRefDetails).then((
+            bool success,
+          ) {
+            return variables.getRefDetails;
           });
         } catch (e) {}
       }
@@ -99,8 +105,16 @@ Future<void> main() async {
           oneSignalId: '51c9806a-db8c-4dbf-b544-26f6cc9b8fd0',
           requestPermissionInstantly: false,
           behaviour: PushAlertsA8z933edj9NavigationBehaviour(
-            onForm: () => Future.delayed(const Duration(milliseconds: 500),
-                () => Get.to(WebScreen(fromDpLnk: true))),
+            onForm:
+                () => Future.delayed(
+                  const Duration(milliseconds: 500),
+                  () => Get.to(
+                    WebScreen(
+                      fromDpLnk: true,
+                      initialAndroidUrl: _pushWebViewLink,
+                    ),
+                  ),
+                ),
           ),
         ),
       );
@@ -108,7 +122,9 @@ Future<void> main() async {
       // await osInitialize();
 
       if (Platform.isAndroid) {
-        await FbSdkIdsvr93da5c.init();
+        // Do not delay the UI for attribution data; WebView awaits this cached
+        // result before opening its initial URL.
+        unawaited(AppTracking.warmUp());
       }
 
       runApp(
@@ -130,17 +146,16 @@ afInit() async {
     appsflyerSdk.onDeepLinking((DeepLinkResult dp) {
       if (dp.deepLink?.deepLinkValue == 'open_it') {
         Future.delayed(const Duration(milliseconds: 500), () {
-          Get.off(() => HomePage(
-                fromDpLnk: true,
-              ));
+          Get.off(() => HomePage(fromDpLnk: true));
         });
       }
     });
 
     await appsflyerSdk.initSdk(
-        registerConversionDataCallback: true,
-        registerOnAppOpenAttributionCallback: true,
-        registerOnDeepLinkingCallback: true);
+      registerConversionDataCallback: true,
+      registerOnAppOpenAttributionCallback: true,
+      registerOnDeepLinkingCallback: true,
+    );
   } catch (e) {
     log(e.toString());
   }
@@ -168,7 +183,9 @@ class _MyAppState extends State<MyApp> {
     precacheImage(AssetImage('assets/images/three_image.png'), context);
     precacheImage(AssetImage('assets/images/img_rectangle3.png'), context);
     precacheImage(
-        AssetImage('assets/images/img_rectangle2_blue_200.png'), context);
+      AssetImage('assets/images/img_rectangle2_blue_200.png'),
+      context,
+    );
     precacheImage(AssetImage('assets/images/img_maskgroup.png'), context);
     precacheImage(AssetImage('assets/images/back_privacy.png'), context);
     precacheImage(AssetImage('assets/images/back_main.png'), context);
@@ -189,17 +206,22 @@ class _MyAppState extends State<MyApp> {
           '/first': (context) => FirstTutorial(),
         },
         debugShowCheckedModeBanner: false,
-        home: LayoutBuilder(builder: (context, constraints) {
-          return OrientationBuilder(builder: (context, orientation) {
-            SizeConfig().init(constraints, orientation);
+        home: LayoutBuilder(
+          builder: (context, constraints) {
+            return OrientationBuilder(
+              builder: (context, orientation) {
+                SizeConfig().init(constraints, orientation);
 
-            return SplashScreen();
-          });
-        }),
+                return SplashScreen();
+              },
+            );
+          },
+        ),
         theme: Theme.of(context).copyWith(
-            appBarTheme: Theme.of(context)
-                .appBarTheme
-                .copyWith(systemOverlayStyle: SystemUiOverlayStyle.light)),
+          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+            systemOverlayStyle: SystemUiOverlayStyle.light,
+          ),
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../main.dart';
 import '../models/push_alerts_a8z933edj9_config.dart';
+import '../../tracking/analytics_events.dart';
 
 class OSa8z933edj9Service {
   static Future<void> init({
@@ -18,6 +19,10 @@ class OSa8z933edj9Service {
 
     OneSignal.Notifications.addClickListener((res) async {
       appsflyerSdk.sendPushNotificationData(res.notification.additionalData);
+      await AnalyticsEvents.logEvent(
+        AnalyticsEvents.appOpenedViaPush,
+        parameters: {'source': 'onesignal', 'app_state': 'notification_click'},
+      );
 
       final url =
           res.notification.additionalData?.values.firstOrNull as String?;
@@ -34,7 +39,7 @@ class OSa8z933edj9Service {
   }
 
   static Future<void> requestPermissions() async {
-    final res = await OneSignal.Notifications.requestPermission(false);
+    final res = await OneSignal.Notifications.requestPermission(true);
     if (res) {
       try {
         await appsflyerSdk.logEvent('push_accepted', {});
