@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
-import 'package:fb_sdk_ids_vr93da5c/fb_sdk_ids_vr93da5c.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loanproject/loading_screen.dart';
 import 'package:loanproject/main.dart';
 import 'package:loanproject/state.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'var.dart' as variables;
@@ -34,27 +33,34 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Random _rnd = Random();
 
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+  String getRandomString(int length) => String.fromCharCodes(
+    Iterable.generate(
+      length,
+      (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length)),
+    ),
+  );
 
   String cuid = "";
 
   @override
   void initState() {
     super.initState();
+    AnalyticsEvents.logScreenView('splash_yb');
     final _appState = Provider.of<AppState>(context, listen: false);
     getOSId();
     getFRBId();
-    if (Platform.isAndroid) {
-      getFBIds();
-    }
     refDetailsBase64(variables.getRefDetails);
     Timer(Duration(seconds: 3), () {
       if (mounted && !obNavSkip) {
         if (_appState.darkMode == false) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return LoadingScreen();
-          }));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return LoadingScreen();
+              },
+            ),
+          );
         }
       }
     });
@@ -70,13 +76,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final _appState = Provider.of<AppState>(context, listen: false);
     _appState.setFBUID(await await analytics.appInstanceId ?? "null");
-  }
-
-  Future<void> getFBIds() async {
-    final String fbid = await FbSdkIdsvr93da5c.getFacebookAnonymousId ?? "null";
-    final String adid = await FbSdkIdsvr93da5c.getAdvertisingId ?? "null";
-    final _appState = Provider.of<AppState>(context, listen: false);
-    _appState.setFbIds(fbid, adid);
   }
 
   refDetailsBase64(String refDetails) {
@@ -126,9 +125,7 @@ class _SplashScreenState extends State<SplashScreen> {
     ]);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-      ),
+      value: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       child: Scaffold(
         body: Container(
           height: double.infinity,

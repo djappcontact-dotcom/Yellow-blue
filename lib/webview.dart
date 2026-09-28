@@ -1,17 +1,16 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:math' hide log;
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:fb_sdk_ids_vr93da5c/fb_sdk_ids_vr93da5c.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loanproject/home.dart';
 import 'package:loanproject/size_config.dart';
 import 'package:loanproject/state.dart';
+import 'package:loanproject/tracking/analytics_events.dart';
+import 'package:loanproject/tracking/app_tracking.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -19,12 +18,15 @@ Map appsFlyerOptions = {
   "afDevKey":
       Platform.isIOS ? 'XmphTEoVgARoCrhALJusC6' : 'XXzKfE9qPGH5XTrEysZc6W',
   "afAppId": '1570037577',
-  "isDebug": true
+  "isDebug": true,
 };
 
 class WebScreen extends StatefulWidget {
-  const WebScreen({Key? key, this.fromDpLnk = false}) : super(key: key);
+  const WebScreen({Key? key, this.fromDpLnk = false, this.initialAndroidUrl})
+    : super(key: key);
+
   final bool fromDpLnk;
+  final String? initialAndroidUrl;
   @override
   _WebScreenState createState() => _WebScreenState();
 }
@@ -38,10 +40,16 @@ class _WebScreenState extends State<WebScreen> {
 
   Random _rnd = Random();
 
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+  String getRandomString(int length) => String.fromCharCodes(
+    Iterable.generate(
+      length,
+      (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length)),
+    ),
+  );
 
   String cuid = "";
+  late final Future<String> _appData;
+  bool _hasLoggedInitialPageLoad = false;
 
   @override
   void initState() {
@@ -49,6 +57,8 @@ class _WebScreenState extends State<WebScreen> {
 
     initConnectivity();
     cuid = getRandomString(15);
+    _appData =
+        Platform.isAndroid ? AppTracking.appData() : Future<String>.value('');
 
     appsflyerSdk.setCustomerUserId(cuid);
 
@@ -56,6 +66,11 @@ class _WebScreenState extends State<WebScreen> {
     //     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     _checkInitialConnectivity();
+    AnalyticsEvents.logScreenView('webview_yb');
+    AnalyticsEvents.logEvent(
+      AnalyticsEvents.formWebViewOpened,
+      parameters: {'source': widget.fromDpLnk ? 'push' : 'app'},
+    );
     if (widget.fromDpLnk) {
       appsflyerSdk.logEvent('af_content_view', {'media_source': 'push'});
     } else {
@@ -63,14 +78,15 @@ class _WebScreenState extends State<WebScreen> {
     }
   }
 
-//   Future<String?> getAppInstanceId() async {
-//   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-//   return await analytics.appInstanceId;
-// }
+  //   Future<String?> getAppInstanceId() async {
+  //   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  //   return await analytics.appInstanceId;
+  // }
 
   Future<void> initConnectivity() async {
-    _connectivitySubscription = _connectivity.onConnectivityChanged
-        .listen((List<ConnectivityResult> result) {
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((
+      List<ConnectivityResult> result,
+    ) {
       // Got a new connectivity status!
       _updateConnectionStatus(result.last);
     });
@@ -116,55 +132,84 @@ class _WebScreenState extends State<WebScreen> {
           return Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: GestureDetector(
-                  child: Icon(Icons.arrow_back_ios,
-                      color: Color.fromRGBO(208, 201, 214, 1)),
-                  onTap: () => Navigator.pop(context),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: GestureDetector(
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Color.fromRGBO(208, 201, 214, 1),
                 ),
-                systemOverlayStyle: SystemUiOverlayStyle.dark),
-            body: ValueListenableBuilder(
-                valueListenable: _controllerNotifier,
-                builder: (context, controller, _) {
-                  return Stack(
-                    children: [
-                      if (controller == null)
-                        const Center(child: CircularProgressIndicator()),
-                      InAppWebView(
-                        key: webViewKey,
-                        initialUrlRequest: URLRequest(
-                          url: WebUri.uri(
-                            Uri.parse(Platform.isAndroid
-                                ? "https://euroloan-pl.site/YB-app-gp.php?CUID=" +
-                                    (_appState.cuid ?? 'null') +
-                                    "&AFID=" +
-                                    (_appState.id ?? 'null') +
-                                    "&OSID=" +
-                                    _osidCheck +
-                                    "&FID=" +
-                                    (_appState.fbuid ?? 'null') +
-                                    "&ref=" +
-                                    (_appState.ref ?? 'null') +
-                                    '&fbid=' +
-                                    (_appState.fbid) +
-                                    '&adid=' +
-                                    (_appState.adid)
-                                : "https://euroloan-pl.site/YB-app-as.php?CUID=" +
-                                    (_appState.cuid ?? 'null') +
-                                    "&AFID=" +
-                                    (_appState.id ?? 'null') +
-                                    "&OSID=" +
-                                    _osidCheck),
+                onTap: () => Navigator.pop(context),
+              ),
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+            ),
+            body: FutureBuilder<String>(
+              future: _appData,
+              builder: (context, trackingSnapshot) {
+                if (Platform.isAndroid && !trackingSnapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final androidUrl = Uri.parse(
+                  widget.initialAndroidUrl ??
+                      'https://euroloan-pl.site/YB-app-gp.php',
+                ).replace(
+                  queryParameters: {
+                    'CUID': _appState.cuid ?? 'null',
+                    'AFID': _appState.id ?? 'null',
+                    'OSID': _osidCheck,
+                    'FID': _appState.fbuid ?? 'null',
+                    'ref': _appState.ref ?? '',
+                    'app_data': trackingSnapshot.data ?? '',
+                  },
+                );
+
+                return ValueListenableBuilder(
+                  valueListenable: _controllerNotifier,
+                  builder: (context, controller, _) {
+                    return Stack(
+                      children: [
+                        if (controller == null)
+                          const Center(child: CircularProgressIndicator()),
+                        InAppWebView(
+                          key: webViewKey,
+                          initialUrlRequest: URLRequest(
+                            url: WebUri.uri(
+                              Platform.isAndroid
+                                  ? androidUrl
+                                  : Uri.parse(
+                                    "https://euroloan-pl.site/YB-app-as.php?CUID=" +
+                                        (_appState.cuid ?? 'null') +
+                                        "&AFID=" +
+                                        (_appState.id ?? 'null') +
+                                        "&OSID=" +
+                                        _osidCheck,
+                                  ),
+                            ),
                           ),
+                          onWebViewCreated: (
+                            InAppWebViewController controller,
+                          ) {
+                            _controllerNotifier.value = controller;
+                          },
+                          onLoadStop: (controller, url) {
+                            if (!_hasLoggedInitialPageLoad) {
+                              _hasLoggedInitialPageLoad = true;
+                              AnalyticsEvents.logEvent(
+                                AnalyticsEvents.formWebViewLoaded,
+                                parameters: {
+                                  'source': widget.fromDpLnk ? 'push' : 'app',
+                                },
+                              );
+                            }
+                          },
                         ),
-                        onWebViewCreated: (InAppWebViewController controller) {
-                          _controllerNotifier.value = controller;
-                        },
-                      )
-                    ],
-                  );
-                }),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           );
         } else {
           double height = MediaQuery.of(context).size.height;
@@ -190,14 +235,12 @@ class _WebScreenState extends State<WebScreen> {
             body: Container(
               decoration: new BoxDecoration(
                 gradient: new LinearGradient(
-                    colors: [
-                      Color(0xFFF1FF50),
-                      Color(0xFFE8FF5B),
-                    ],
-                    begin: const FractionalOffset(0.0, 3.0),
-                    end: const FractionalOffset(1.0, 0.0),
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp),
+                  colors: [Color(0xFFF1FF50), Color(0xFFE8FF5B)],
+                  begin: const FractionalOffset(0.0, 3.0),
+                  end: const FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp,
+                ),
               ),
               child: SafeArea(
                 child: Column(
@@ -227,9 +270,7 @@ class _WebScreenState extends State<WebScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 10),
                     Container(
                       height: MediaQuery.of(context).size.width * sizeImage,
                       width: MediaQuery.of(context).size.height * sizeImage,
@@ -248,7 +289,7 @@ class _WebScreenState extends State<WebScreen> {
                           child: Image.asset('assets/images/buttontry.png'),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

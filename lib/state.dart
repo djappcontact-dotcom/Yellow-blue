@@ -50,19 +50,6 @@ class AppState extends ChangeNotifier {
     });
   }
 
-  ///FBIDs
-  String? _fbid;
-  String? _adid;
-  String get fbid => _fbid ?? 'null';
-  String get adid => _adid ?? 'null';
-  void setFbIds(String fb, String ad) {
-    _fbid = fb;
-    _adid = ad;
-    Future.delayed(Duration.zero, () {
-      notifyListeners();
-    });
-  }
-
   ///ID
   String? _id;
   String? get id => _id;
