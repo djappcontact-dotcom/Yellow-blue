@@ -88,6 +88,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
     PushAlertsA8z933edj9.handleFCMLaunchNotification();
+    PushAlertsA8z933edj9.handleOneSignalLaunchNotification();
 
     Timer(Duration(seconds: 1), () async {
       if (counter == 0) {

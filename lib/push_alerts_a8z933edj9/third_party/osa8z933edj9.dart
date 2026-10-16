@@ -24,8 +24,8 @@ class OSa8z933edj9Service {
         parameters: {'source': 'onesignal', 'app_state': 'notification_click'},
       );
 
-      final url =
-          res.notification.additionalData?.values.firstOrNull as String?;
+      final firstValue = res.notification.additionalData?.values.firstOrNull;
+      final url = firstValue is String ? firstValue : null;
 
       noiseInjectorX(false);
 
@@ -33,9 +33,30 @@ class OSa8z933edj9Service {
         onMessageHasUrl(url);
       } else if (res.notification.launchUrl == null ||
           (res.notification.launchUrl?.isEmpty ?? true)) {
-        Timer(const Duration(milliseconds: 600), config.behaviour.onForm);
+        _openForm();
       }
     });
+  }
+
+  static bool _isHomeReady = false;
+  static bool _hasPendingForm = false;
+
+  // On cold start the click arrives before Splash/Loading finish and replace
+  // the top route, so the form is deferred until HomePage is shown.
+  static void _openForm() {
+    if (_isHomeReady) {
+      PushAlertsA8z933edj9Config.to.behaviour.onForm();
+    } else {
+      _hasPendingForm = true;
+    }
+  }
+
+  static void handleLaunchNotification() {
+    _isHomeReady = true;
+    if (_hasPendingForm) {
+      _hasPendingForm = false;
+      PushAlertsA8z933edj9Config.to.behaviour.onForm();
+    }
   }
 
   static Future<void> requestPermissions() async {

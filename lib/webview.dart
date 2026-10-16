@@ -118,6 +118,13 @@ class _WebScreenState extends State<WebScreen> {
   double progress = 0;
   String _osidCheck = "70621a8c-7e46-46b9-88fd-1411a45982a3";
 
+  void _logCurrentUrl(WebUri? currentUrl) {
+    if (currentUrl == null) return;
+
+    url = currentUrl.toString();
+    debugPrint('[WebView] Current URL: $url');
+  }
+
   @override
   Widget build(BuildContext context) {
     final _appState = Provider.of<AppState>(context, listen: false);
@@ -193,6 +200,7 @@ class _WebScreenState extends State<WebScreen> {
                             _controllerNotifier.value = controller;
                           },
                           onLoadStop: (controller, url) {
+                            _logCurrentUrl(url);
                             if (!_hasLoggedInitialPageLoad) {
                               _hasLoggedInitialPageLoad = true;
                               AnalyticsEvents.logEvent(
@@ -202,6 +210,13 @@ class _WebScreenState extends State<WebScreen> {
                                 },
                               );
                             }
+                          },
+                          onUpdateVisitedHistory: (
+                            controller,
+                            url,
+                            androidIsReload,
+                          ) {
+                            _logCurrentUrl(url);
                           },
                         ),
                       ],
